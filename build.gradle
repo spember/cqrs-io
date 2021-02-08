@@ -1,0 +1,34 @@
+
+ext {
+    junitVersion = "5.6.2"
+    truthVersion = "1.1"
+}
+
+
+allprojects {
+
+    group = 'io.cqrs'
+    version = '0.1.0-SNAPSHOT'
+
+    repositories {
+        mavenLocal()
+        jcenter()
+        mavenCentral()
+    }
+}
+subprojects {
+    apply plugin: 'java-library'
+
+    dependencies {
+        testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
+        testImplementation "com.google.truth:truth:$truthVersion"
+
+        // Use JUnit Jupiter Engine for testing.
+        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+    }
+
+    tasks.named('test') {
+        // Use junit platform for unit tests.
+        useJUnitPlatform()
+    }
+}
