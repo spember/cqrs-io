@@ -1,5 +1,7 @@
 package io.cqrs.core;
 
+import javax.annotation.Nonnull;
+
 /**
  * An Aggregate is the boundary in which multiple Entities operate as one unit. One Entity is the 'root', who's id is
  * the only reference allowed by other Entities / Aggregates.
@@ -10,7 +12,9 @@ package io.cqrs.core;
  */
 public interface Aggregate {
 
+    @Nonnull
     Aggregate loadCurrentState();
 
+    @Nonnull
     CommandHandlingResult handle(Command command);
 }
