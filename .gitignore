@@ -2,7 +2,19 @@
 .gradle
 
 # Ignore Gradle build output directory
-build
+build/
 
 .idea
 out/
+
+Thumbs.db
+.DS_Store
+.gradle
+target/
+*.iml
+*.ipr
+*.iws
+.project
+.settings
+.classpath
+.factorypath

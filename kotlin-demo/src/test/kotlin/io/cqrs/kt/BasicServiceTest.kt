@@ -1,5 +1,6 @@
 package io.cqrs.kt
 
+import com.google.common.truth.Truth.assertThat
 import io.cqrs.core.identifiers.UserId
 import io.cqrs.core.event.EventCoreData
 import io.cqrs.kt.aggregates.BookId
@@ -16,6 +17,7 @@ class BasicServiceTest {
     fun `basic context test` () {
         val context = EventCoreData(BookId(UUID.randomUUID()), 1, Instant.now(),
             Instant.now(), UserId("test"))
+        assertThat(context.revision).isEqualTo(1)
 
     }
 }
