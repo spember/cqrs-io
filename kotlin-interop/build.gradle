@@ -6,7 +6,7 @@ plugins {
 sourceCompatibility = 1.8
 
 dependencies {
-    api project(':lib')
+    api project(':cqrs-core')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 }
 

@@ -8,5 +8,5 @@
  */
 
 rootProject.name = 'cqrs.io'
-include('lib')
+include('cqrs-core')
 include('kotlin-interop')
