@@ -60,7 +60,7 @@ public class GeneralServiceLifecycleTest {
         assertThat(check.getRoot().getRevision()).isEqualTo(0);
 
         check.loadCurrentState();
-        assertThat(check.getRoot().getRevision()).isEqualTo(4);
+        assertThat(check.getRoot().getRevision()).isEqualTo(5);
         assertThat(check.getRoot().getNumLegs()).isEqualTo(8);
         assertThat(check.getRoot().getNumSeats()).isEqualTo(2);
     }

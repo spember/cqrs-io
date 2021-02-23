@@ -11,7 +11,7 @@ import io.cqrs.core.furniture.sofa.LegsAdded;
 import io.cqrs.core.furniture.sofa.PositionChosen;
 import io.cqrs.core.furniture.sofa.Sofa;
 import io.cqrs.core.furniture.sofa.SofaId;
-import io.cqrs.core.furniture.sofa.SomoneSat;
+import io.cqrs.core.furniture.sofa.SomeoneSat;
 import io.cqrs.core.identifiers.UserId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -66,8 +66,8 @@ public class SingleEntityEventApplicationTest {
 
         cushion.apply(new EventEnvelope<>(new PositionChosen(Cushion.Position.LEFT), new EventCoreData<>(id, 1, userId)));
         cushion.apply(new EventEnvelope<>(new PositionChosen(Cushion.Position.MIDDLE), new EventCoreData<>(id, 2, userId)));
-        cushion.apply(new EventEnvelope<>(new SomoneSat(1), new EventCoreData<>(id, 3, userId)));
-        cushion.apply(new EventEnvelope<>(new SomoneSat(3), new EventCoreData<>(id, 4, userId)));
+        cushion.apply(new EventEnvelope<>(new SomeoneSat(1), new EventCoreData<>(id, 3, userId)));
+        cushion.apply(new EventEnvelope<>(new SomeoneSat(3), new EventCoreData<>(id, 4, userId)));
 
         assertThat(cushion.getPosition()).isEqualTo(Cushion.Position.MIDDLE);
         assertThat(cushion.getTimesSatOn()).isEqualTo(4);

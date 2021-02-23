@@ -2,11 +2,11 @@ package io.cqrs.core.furniture.sofa;
 
 import io.cqrs.core.event.Event;
 
-public class SomoneSat implements Event {
+public class SomeoneSat implements Event {
 
     private final int times;
 
-    public SomoneSat(final int times) {
+    public SomeoneSat(final int times) {
         this.times = times;
     }
 

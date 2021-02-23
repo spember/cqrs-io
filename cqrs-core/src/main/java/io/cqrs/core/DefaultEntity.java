@@ -16,8 +16,6 @@ public abstract class DefaultEntity<EI extends EntityId> implements Entity<EI>{
     protected EI id = null;
     protected int revision = 0;
 
-    protected Map<Class, EventApplier> appliers = new HashMap<>();
-
     public DefaultEntity(@Nonnull final EI id) {
         this.id = id;
     }
@@ -40,9 +38,6 @@ public abstract class DefaultEntity<EI extends EntityId> implements Entity<EI>{
 
     @Override
     public Entity<EI> apply(@Nonnull final EventEnvelope<? extends Event, ? extends EntityId<?>> envelope) throws EventsOutOfOrderException {
-        if (!getAppliers().containsKey(envelope.getEvent().getClass())) {
-            return this;
-        }
         if (!envelope.getEventCoreData().getEntityId().equals(this.id)) {
             throw new IncorrectTargetException("Attempted to apply an event meant for " +
                     (envelope.getEventCoreData().getEntityId()) + " to this entity, " + this.id);
@@ -52,10 +47,9 @@ public abstract class DefaultEntity<EI extends EntityId> implements Entity<EI>{
                     envelope.getEventCoreData().getRevision());
         }
         revision = envelope.getEventCoreData().getRevision();
-        getAppliers().get(envelope.getEvent().getClass()).accept(envelope);
+        handleEventApply(envelope);
         return this;
     }
 
-    abstract protected <E extends Event> Map<Class, EventApplier> getAppliers();
-
+    abstract protected void handleEventApply(@Nonnull final EventEnvelope<? extends Event, ? extends EntityId<?>> envelope);
 }

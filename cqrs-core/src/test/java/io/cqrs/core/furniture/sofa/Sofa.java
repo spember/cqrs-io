@@ -2,7 +2,10 @@ package io.cqrs.core.furniture.sofa;
 
 import io.cqrs.core.AggregateRoot;
 import io.cqrs.core.DefaultEntity;
+import io.cqrs.core.event.Event;
 import io.cqrs.core.event.EventApplier;
+import io.cqrs.core.event.EventEnvelope;
+import io.cqrs.core.identifiers.EntityId;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -22,6 +25,25 @@ public class Sofa extends DefaultEntity<SofaId> implements AggregateRoot {
         super(id);
     }
 
+    @Override
+    protected void handleEventApply(@Nonnull final EventEnvelope<? extends Event, ? extends EntityId<?>> envelope) {
+        if (envelope.getEvent() instanceof LegsAdded) {
+            applyLegsAdded((EventEnvelope<LegsAdded, SofaId>) envelope);
+        } else if (envelope.getEvent() instanceof NameUpdated) {
+            applyNameChange((EventEnvelope<NameUpdated, SofaId>) envelope);
+        } else if (envelope.getEvent() instanceof SeatsAdded) {
+            this.numSeats += 1;
+        }
+    }
+
+    public void applyLegsAdded(EventEnvelope<LegsAdded, SofaId> envelope) {
+        numLegs += envelope.getEvent().getCount();
+    }
+
+    public void applyNameChange(EventEnvelope<NameUpdated, SofaId> envelope) {
+        this.publicName = envelope.getEvent().getNextName();
+    }
+
     public int getNumLegs() {
         return numLegs;
     }
@@ -32,21 +54,5 @@ public class Sofa extends DefaultEntity<SofaId> implements AggregateRoot {
 
     public String getPublicName() {
         return publicName;
-    }
-
-    @Override
-    protected Map<Class, EventApplier> getAppliers() {
-        appliers.put(LegsAdded.class, (EventApplier<LegsAdded, SofaId>) legsAddedSofaIdEventEnvelope ->
-                numLegs += legsAddedSofaIdEventEnvelope.getEvent().getCount()
-        );
-        appliers.put(NameUpdated.class, (EventApplier<NameUpdated, SofaId>) eventEnvelope ->
-                publicName = eventEnvelope.getEvent().getNextName()
-        );
-        appliers.put(SeatsAdded.class, (EventApplier<SeatsAdded, SofaId>) eventEnvelope ->
-                numSeats += 1
-        );
-
-
-        return appliers;
     }
 }

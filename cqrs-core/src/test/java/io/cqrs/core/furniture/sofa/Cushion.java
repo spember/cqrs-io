@@ -3,6 +3,8 @@ package io.cqrs.core.furniture.sofa;
 import io.cqrs.core.DefaultEntity;
 import io.cqrs.core.event.Event;
 import io.cqrs.core.event.EventApplier;
+import io.cqrs.core.event.EventEnvelope;
+import io.cqrs.core.identifiers.EntityId;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
@@ -25,17 +27,13 @@ public class Cushion extends DefaultEntity<CushionId> {
     }
 
     @Override
-    protected <E extends Event> Map<Class, EventApplier> getAppliers() {
-
-        appliers.put(PositionChosen.class, (EventApplier<PositionChosen, CushionId>) positionEventEnvelope ->
-            position = positionEventEnvelope.getEvent().getPosition()
-        );
-
-        appliers.put(SomoneSat.class, (EventApplier<SomoneSat, CushionId>) eventEnvelope ->
-                timesSatOn += eventEnvelope.getEvent().getTimes()
-        );
-
-        return appliers;
+    protected void handleEventApply(@Nonnull final EventEnvelope<? extends Event, ? extends EntityId<?>> envelope) {
+        if (envelope.getEvent() instanceof PositionChosen) {
+            position = ((EventEnvelope<PositionChosen, SofaId>) envelope).getEvent().getPosition();
+        }
+        if (envelope.getEvent() instanceof SomeoneSat) {
+            timesSatOn += ((EventEnvelope<SomeoneSat, SofaId>) envelope).getEvent().getTimes();
+        }
     }
 
     public enum Position {
