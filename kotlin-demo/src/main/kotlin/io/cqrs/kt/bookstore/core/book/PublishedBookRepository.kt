@@ -17,4 +17,8 @@ interface PublishedBookRepository {
      */
     fun findAllByTitle(title: String): Stream<PublishedBook>
 
+    /**
+     * Just stream them all
+     */
+    fun list(): Stream<PublishedBook>
 }

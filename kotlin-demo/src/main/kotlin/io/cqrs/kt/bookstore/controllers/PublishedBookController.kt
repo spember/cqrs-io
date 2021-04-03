@@ -1,10 +1,12 @@
 package io.cqrs.kt.bookstore.controllers
 
 import io.cqrs.kt.bookstore.core.book.PublishedBook
+import io.cqrs.kt.bookstore.core.book.PublishedBookRepository
 import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import java.time.LocalDate
+import javax.inject.Inject
 
 
 /**
@@ -13,8 +15,11 @@ import java.time.LocalDate
 @Controller("/published-books")
 class PublishedBookController {
 
+    @Inject
+    lateinit var publishedBookRepository: PublishedBookRepository
+
     @Get(value="/", produces = [MediaType.APPLICATION_JSON])
     fun index(): PublishedBook {
-        return PublishedBook("The Chronicles of Test", "Test Testington", "123", 25, LocalDate.now())
+        return publishedBookRepository.list().findFirst().get()
     }
 }
