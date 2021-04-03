@@ -1,7 +1,7 @@
-package io.cqrs.kt.commands
+package io.cqrs.kt.bookstore.core.commands
 
 import io.cqrs.core.DefaultCommand
-import io.cqrs.kt.identifiers.LibraryStaffId
+import io.cqrs.kt.bookstore.core.identifiers.LibraryStaffId
 import java.time.Instant
 
 /**

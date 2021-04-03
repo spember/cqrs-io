@@ -1,4 +1,4 @@
-package io.cqrs.kt.identifiers
+package io.cqrs.kt.bookstore.core.identifiers
 
 import io.cqrs.core.identifiers.UserId
 

@@ -1,10 +1,10 @@
-package io.cqrs.kt.book
+package io.cqrs.kt.bookstore.core.book
 
 import io.cqrs.core.DefaultEntity
 import io.cqrs.core.event.Event
 import io.cqrs.core.event.EventEnvelope
 import io.cqrs.core.identifiers.EntityId
-import io.cqrs.kt.identifiers.BookId
+import io.cqrs.kt.bookstore.core.identifiers.BookId
 import java.time.Instant
 
 /**

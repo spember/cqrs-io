@@ -7,7 +7,7 @@ plugins {
 }
 
 version = "0.1"
-group = "cqrs.io"
+group = "io.cqrs"
 
 repositories {
     mavenCentral()
@@ -19,12 +19,14 @@ micronaut {
     testRuntime("junit5")
     processing {
         incremental(true)
-        annotations("cqrs.io.*")
+        annotations("io.cqrs.kt.bookstore.*")
     }
 }
 
 dependencies {
     api project(':cqrs-core')
+    annotationProcessor "io.micronaut:micronaut-inject-java"
+    annotationProcessor "io.micronaut:micronaut-validation"
     implementation("io.micronaut:micronaut-validation")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}")
     implementation("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
@@ -37,7 +39,7 @@ dependencies {
 
 
 application {
-    mainClass.set("io.cqrs.ApplicationKt")
+    mainClass.set("io.cqrs.kt.bookstore.ApplicationKt")
 }
 
 java {
