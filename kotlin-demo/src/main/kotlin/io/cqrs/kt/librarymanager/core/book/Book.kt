@@ -1,10 +1,10 @@
-package io.cqrs.kt.bookstore.core.book
+package io.cqrs.kt.librarymanager.core.book
 
 import io.cqrs.core.DefaultEntity
 import io.cqrs.core.event.Event
 import io.cqrs.core.event.EventEnvelope
 import io.cqrs.core.identifiers.EntityId
-import io.cqrs.kt.bookstore.core.identifiers.BookId
+import io.cqrs.kt.librarymanager.core.identifiers.BookId
 import java.time.Instant
 
 /**
@@ -21,13 +21,15 @@ class Book(id: BookId): DefaultEntity<BookId>(id) {
     var dateObtained: Instant = Instant.now()
         private set
 
+    // setting as lateinit; the first event should set this value
+    lateinit var sourceBook: PublishedBook
+        private set
+
     var lastCheckedOut: Instant? = null
         private set
 
     var lastReturned: Instant? = null
         private set
-
-    var isbn = ""
 
     var inStock = true
         private set
@@ -35,11 +37,10 @@ class Book(id: BookId): DefaultEntity<BookId>(id) {
     var timesCheckedOut = 0
 
     override fun handleEventApply(envelope: EventEnvelope<out Event, out EntityId<*>>) {
-        val event = envelope.event
-        when(event){
+        when(val event = envelope.event){
             is BookDonated -> {
                 dateObtained = envelope.eventCoreData.instantOccurred
-                isbn = event.isbn
+                sourceBook = event.sourceBook
             }
             is BookCheckedOut -> {
                 inStock = false

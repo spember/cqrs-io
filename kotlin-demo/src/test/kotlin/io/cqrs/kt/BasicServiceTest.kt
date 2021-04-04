@@ -3,7 +3,7 @@ package io.cqrs.kt
 import com.google.common.truth.Truth.assertThat
 import io.cqrs.core.identifiers.UserId
 import io.cqrs.core.event.EventCoreData
-import io.cqrs.kt.bookstore.core.identifiers.BookId
+import io.cqrs.kt.librarymanager.core.identifiers.BookId
 import org.junit.jupiter.api.Test
 import java.time.Instant
 

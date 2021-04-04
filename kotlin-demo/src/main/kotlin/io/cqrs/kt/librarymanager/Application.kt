@@ -1,4 +1,4 @@
-package io.cqrs.kt.bookstore
+package io.cqrs.kt.librarymanager
 
 import io.micronaut.runtime.Micronaut.*
 

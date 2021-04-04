@@ -1,4 +1,4 @@
-package io.cqrs.kt.bookstore
+package io.cqrs.kt.librarymanager
 
 import io.micronaut.runtime.server.EmbeddedServer
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest

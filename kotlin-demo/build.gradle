@@ -19,7 +19,7 @@ micronaut {
     testRuntime("junit5")
     processing {
         incremental(true)
-        annotations("io.cqrs.kt.bookstore.*")
+        annotations("io.cqrs.kt.*")
     }
 }
 
@@ -39,7 +39,7 @@ dependencies {
 
 
 application {
-    mainClass.set("io.cqrs.kt.bookstore.ApplicationKt")
+    mainClass.set("io.cqrs.kt.librarymanager.ApplicationKt")
 }
 
 java {

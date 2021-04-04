@@ -1,7 +1,7 @@
-package io.cqrs.kt.bookstore.db
+package io.cqrs.kt.librarymanager.db
 
-import io.cqrs.kt.bookstore.core.book.PublishedBook
-import io.cqrs.kt.bookstore.core.book.PublishedBookRepository
+import io.cqrs.kt.librarymanager.core.book.PublishedBook
+import io.cqrs.kt.librarymanager.core.book.PublishedBookRepository
 import java.time.LocalDate
 import java.util.stream.Stream
 

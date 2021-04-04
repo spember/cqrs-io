@@ -1,6 +1,6 @@
-package io.cqrs.kt.bookstore.controllers
+package io.cqrs.kt.librarymanager.controllers
 
-import io.cqrs.kt.bookstore.core.book.PublishedBook
+import io.cqrs.kt.librarymanager.core.book.PublishedBook
 import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
