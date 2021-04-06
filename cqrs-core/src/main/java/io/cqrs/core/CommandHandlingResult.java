@@ -24,7 +24,7 @@ public class CommandHandlingResult {
     }
 
     @Nonnull
-    Optional<Exception> maybeError() {
+    public Optional<Exception> maybeError() {
         return Optional.ofNullable(capturedError);
     }
 

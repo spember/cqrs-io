@@ -16,5 +16,5 @@ public interface Aggregate {
     Aggregate loadCurrentState();
 
     @Nonnull
-    CommandHandlingResult handle(Command command);
+    CommandHandlingResult handle(@Nonnull Command command);
 }

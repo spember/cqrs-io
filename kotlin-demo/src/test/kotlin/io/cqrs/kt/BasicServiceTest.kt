@@ -6,6 +6,7 @@ import io.cqrs.core.event.EventCoreData
 import io.cqrs.kt.librarymanager.core.identifiers.BookId
 import org.junit.jupiter.api.Test
 import java.time.Instant
+import java.util.UUID
 
 /**
  * A 'scratch' test to ensure the nonnull annotations work with kotlin, basically
@@ -15,7 +16,7 @@ class BasicServiceTest {
     @Test
     fun `basic context test` () {
         val context = EventCoreData(
-            BookId("test-1"), 1, Instant.now(),
+            BookId(UUID.randomUUID()), 1, Instant.now(),
             Instant.now(), UserId("test"))
         assertThat(context.revision).isEqualTo(1)
 

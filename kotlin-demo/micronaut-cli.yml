@@ -1,5 +1,5 @@
 applicationType: default
-defaultPackage: cqrs.io
+defaultPackage: io.cqrs
 testFramework: junit
 sourceLanguage: kotlin
 buildTool: gradle

@@ -5,4 +5,4 @@ import io.cqrs.core.identifiers.UserId
 /**
  * Signifies
  */
-class LibraryStaffId(value: String): UserId<String>(value)
+data class LibraryStaffId(val value: String): UserId<String>(value)
