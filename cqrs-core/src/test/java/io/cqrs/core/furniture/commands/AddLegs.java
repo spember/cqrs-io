@@ -5,7 +5,7 @@ import io.cqrs.core.identifiers.UserId;
 
 import java.time.Instant;
 
-public class AddLegs<UI extends UserId> extends DefaultCommand<UI> {
+public class AddLegs<UI extends UserId<?>> extends DefaultCommand<UI> {
 
     private final int requestedLegs;
 

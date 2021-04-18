@@ -1,8 +1,7 @@
 package io.cqrs.kt.librarymanager
 
-import com.fasterxml.jackson.core.type.TypeReference
-import io.cqrs.kt.librarymanager.controllers.PublishedBookResponse
 import io.cqrs.kt.librarymanager.core.book.PublishedBook
+import io.cqrs.kt.librarymanager.dto.PublishedBookResponse
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.annotation.Client

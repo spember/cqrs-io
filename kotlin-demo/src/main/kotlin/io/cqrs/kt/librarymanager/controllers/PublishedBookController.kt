@@ -2,12 +2,12 @@ package io.cqrs.kt.librarymanager.controllers
 
 import io.cqrs.kt.librarymanager.core.book.PublishedBook
 import io.cqrs.kt.librarymanager.core.book.PublishedBookRepository
+import io.cqrs.kt.librarymanager.dto.PublishedBookResponse
 import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.PathVariable
 import io.micronaut.http.annotation.QueryValue
-import java.time.LocalDate
 import javax.inject.Inject
 import kotlin.streams.toList
 
@@ -34,5 +34,3 @@ class PublishedBookController {
     fun byIsbn(@PathVariable isbn: String): PublishedBook? =
         publishedBookRepository.findByIsbn(isbn)
 }
-
-data class PublishedBookResponse(val books: List<PublishedBook>)

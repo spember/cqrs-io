@@ -5,7 +5,7 @@ import io.cqrs.core.identifiers.UserId;
 import javax.annotation.Nonnull;
 import java.time.Instant;
 
-public abstract class DefaultCommand<UI extends UserId> implements Command<UI> {
+public abstract class DefaultCommand<UI extends UserId<?>> implements Command<UI> {
 
     private final UI userId;
     private final Instant timeOccurred;

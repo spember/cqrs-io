@@ -5,7 +5,7 @@ import io.cqrs.core.identifiers.UserId;
 
 import java.time.Instant;
 
-public class CreateNewSofa<UI extends UserId> extends DefaultCommand<UI> {
+public class CreateNewSofa<UI extends UserId<?>> extends DefaultCommand<UI> {
     private final int numSeats;
     private final int numLegs;
 

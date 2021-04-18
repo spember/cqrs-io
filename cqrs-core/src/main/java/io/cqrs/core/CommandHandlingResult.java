@@ -13,19 +13,31 @@ public class CommandHandlingResult {
 
     private Exception capturedError;
 
+    // todo make this parameterized
+    private Entity<EntityId<?>> capturedEntity;
+
     private final List<EventEnvelope<? extends Event, ? extends EntityId<?>>> uncommittedEvents = new ArrayList<>();
 
     public CommandHandlingResult(@Nonnull final Exception capturedError) {
         this.capturedError = capturedError;
     }
 
-    public CommandHandlingResult(@Nonnull final List<EventEnvelope<? extends Event, ? extends EntityId<?>>> events) {
+    public CommandHandlingResult(
+            @Nonnull final Entity<EntityId<?>> entity,
+            @Nonnull final List<EventEnvelope<? extends Event, ? extends EntityId<?>>> events
+    ) {
+        this.capturedEntity = entity;
         uncommittedEvents.addAll(events);
     }
 
     @Nonnull
     public Optional<Exception> maybeError() {
         return Optional.ofNullable(capturedError);
+    }
+
+    @Nonnull
+    public Optional<? extends Entity<? extends EntityId<?>>> maybeEntity() {
+        return Optional.ofNullable(capturedEntity);
     }
 
     @Nonnull

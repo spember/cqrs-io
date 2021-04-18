@@ -56,6 +56,7 @@ public class EventFactory<C extends Command, E extends Entity, EI extends Entity
 
     @Nonnull
     public CommandHandlingResult toUncommittedEventsResult() {
-        return new CommandHandlingResult(getEventEnvelopes());
+        System.out.println("About to write an entity" + entity);
+        return new CommandHandlingResult(entity, getEventEnvelopes());
     }
 }
