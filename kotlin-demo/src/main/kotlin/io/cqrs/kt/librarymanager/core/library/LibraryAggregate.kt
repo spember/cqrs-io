@@ -6,7 +6,7 @@ import io.cqrs.core.CommandHandlingResult
 import io.cqrs.core.event.EventFactory
 import io.cqrs.core.event.EventRepository
 import io.cqrs.core.identifiers.UserId
-import io.cqrs.kt.librarymanager.core.commands.DonateBookToLibrary
+import io.cqrs.kt.librarymanager.core.commands.DonateBooksToLibrary
 import io.cqrs.kt.librarymanager.core.commands.FoundLibrary
 import io.cqrs.kt.librarymanager.core.identifiers.LibraryId
 import java.lang.RuntimeException
@@ -34,18 +34,18 @@ class LibraryAggregate(libraryId: LibraryId, private val eventRepository: EventR
         return this
     }
 
-    override fun handle(command: Command<out UserId<*>>): CommandHandlingResult {
+    override fun handle(command: Command<out UserId<*>>): CommandHandlingResult<Library> {
         return when (command) {
             is FoundLibrary -> handle(command)
-            is DonateBookToLibrary -> handle(command)
+            is DonateBooksToLibrary -> handle(command)
             else -> CommandHandlingResult(RuntimeException("Unknown command received: ${command::class.java}"))
         }
     }
 
-    private fun handle(command: FoundLibrary): CommandHandlingResult {
+    private fun handle(command: FoundLibrary): CommandHandlingResult<Library> {
         return if (root.isBare) { // if it's bare that means we haven't created this library yet
             // Use the EventFactory to make creating new events easier.
-            EventFactory<FoundLibrary, Library, LibraryId>(command, root)
+            EventFactory<FoundLibrary, LibraryId, Library>(command, root)
                 .addNext(LibraryFounded(command.requestedId, command.name, command.timeOccurred))
                 .addNext(CapacityIncreased(command.initialCapacity))
                 .toUncommittedEventsResult()
@@ -54,13 +54,13 @@ class LibraryAggregate(libraryId: LibraryId, private val eventRepository: EventR
         }
     }
 
-    private fun handle(command: DonateBookToLibrary): CommandHandlingResult {
-        return if (root.currentInventoryCount + command.copies > root.maximumCapacity) {
+    private fun handle(command: DonateBooksToLibrary): CommandHandlingResult<Library> {
+        return if (root.currentInventoryCount + command.totalCopies() > root.maximumCapacity) {
             // todo: make individual Exceptions for these errors
             CommandHandlingResult(RuntimeException("Library is too full!"))
         } else {
-            EventFactory<DonateBookToLibrary, Library, LibraryId>(command, root)
-                .addNext(BooksDonated(command.copies))
+            EventFactory<DonateBooksToLibrary, LibraryId, Library>(command, root)
+                .addNext(BooksDonated(command.totalCopies()))
                 .toUncommittedEventsResult()
         }
     }

@@ -22,4 +22,3 @@ successfully to others - and implement applications that follow the official spi
 
 ## Examples
 
-

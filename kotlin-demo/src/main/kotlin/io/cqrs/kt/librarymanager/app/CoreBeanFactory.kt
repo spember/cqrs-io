@@ -21,7 +21,10 @@ class CoreBeanFactory {
     fun eventRepository(): EventRepository = InMemoryEventRepository()
 
     @Singleton
-    fun libraryService(eventRepository: EventRepository): LibraryService = LibraryService(eventRepository)
+    fun libraryService(
+        publishedBookRepository: PublishedBookRepository,
+        eventRepository: EventRepository
+    ): LibraryService = LibraryService(publishedBookRepository, eventRepository)
 
 
 }

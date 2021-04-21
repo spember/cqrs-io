@@ -23,6 +23,10 @@ class InMemoryEventRepository: EventRepository {
         log.debug("Successfully recorded ${events.size} events. Event Store now contains ${journal.size} events")
     }
 
+    fun reset() {
+        journal.removeAll { it.eventCoreData.revision > 2 }
+    }
+
     companion object {
         private val log = LoggerFactory.getLogger(InMemoryEventRepository::class.java)
     }

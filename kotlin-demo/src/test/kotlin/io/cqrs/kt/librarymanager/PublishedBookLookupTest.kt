@@ -29,7 +29,6 @@ class PublishedBookLookupTest {
         val response: PublishedBookResponse = client.toBlocking()
             .retrieve(HttpRequest.GET<PublishedBookResponse>("${server.uri}/published-books"), PublishedBookResponse::class.java)
         Assertions.assertNotNull(response)
-        println("Received book was ${response.books.first().title}")
         Assertions.assertEquals(response.books.first().pageCount, 25)
     }
 

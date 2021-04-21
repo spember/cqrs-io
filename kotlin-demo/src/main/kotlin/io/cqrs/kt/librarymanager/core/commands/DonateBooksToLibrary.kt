@@ -9,9 +9,13 @@ import java.time.Instant
 /**
  * A shipment of donations has been received and needs to be entered into the system by the staff.
  */
-class DonateBookToLibrary(
+class DonateBooksToLibrary(
     userId: LibraryStaffId,
     val libraryId: LibraryId,
-    val publishedBook: PublishedBook,
-    val copies: Int = 1
-    ): DefaultCommand<LibraryStaffId>(userId, Instant.now())
+    val books: List<CommandRow>
+    ): DefaultCommand<LibraryStaffId>(userId, Instant.now()) {
+        class CommandRow(val isbn: String, val copies: Int = 1)
+
+        fun totalCopies(): Int =
+            books.sumBy { commandRow -> commandRow.copies }
+    }

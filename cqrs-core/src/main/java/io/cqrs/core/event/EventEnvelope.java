@@ -15,6 +15,14 @@ public class EventEnvelope<V extends Event, EI extends EntityId> {
         this.eventCoreData = eventCoreData;
     }
 
+    @Override
+    public String toString() {
+        return "EventEnvelope{" +
+                "event=" + event +
+                ", entity " + eventCoreData.getEntityId() + ", " +eventCoreData.getRevision() +
+                '}';
+    }
+
     @Nonnull
     public V getEvent() {
         return event;

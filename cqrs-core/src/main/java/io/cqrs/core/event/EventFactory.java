@@ -14,7 +14,7 @@ import java.util.List;
  * Used to streamline the generation of new Events during the handling of a Command. Completely optional
  * but is intended to be useful in cutting down on boiler plate code.
  */
-public class EventFactory<C extends Command, E extends Entity, EI extends EntityId> {
+public class EventFactory<C extends Command, EI extends EntityId<?>, E extends Entity<EI>> {
 
     private E entity;
     private C sourceCommand;
@@ -33,7 +33,7 @@ public class EventFactory<C extends Command, E extends Entity, EI extends Entity
      * @return this Factory
      */
     @Nonnull
-    public EventFactory addNext(@Nonnull Event nextEvent) {
+    public EventFactory<C, EI, E> addNext(@Nonnull Event nextEvent) {
         EventEnvelope envelope = new EventEnvelope<>(
                 nextEvent,
                 new EventCoreData<>(
@@ -55,8 +55,8 @@ public class EventFactory<C extends Command, E extends Entity, EI extends Entity
     }
 
     @Nonnull
-    public CommandHandlingResult toUncommittedEventsResult() {
+    public CommandHandlingResult<E> toUncommittedEventsResult() {
         System.out.println("About to write an entity" + entity);
-        return new CommandHandlingResult(entity, getEventEnvelopes());
+        return new CommandHandlingResult<E>(entity, getEventEnvelopes());
     }
 }

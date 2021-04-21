@@ -9,12 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class CommandHandlingResult {
+public class CommandHandlingResult<E extends Entity<? extends EntityId<?>>> {
 
     private Exception capturedError;
 
     // todo make this parameterized
-    private Entity<EntityId<?>> capturedEntity;
+    private E capturedEntityRoot;
 
     private final List<EventEnvelope<? extends Event, ? extends EntityId<?>>> uncommittedEvents = new ArrayList<>();
 
@@ -23,10 +23,10 @@ public class CommandHandlingResult {
     }
 
     public CommandHandlingResult(
-            @Nonnull final Entity<EntityId<?>> entity,
+            @Nonnull final E entity,
             @Nonnull final List<EventEnvelope<? extends Event, ? extends EntityId<?>>> events
     ) {
-        this.capturedEntity = entity;
+        this.capturedEntityRoot = entity;
         uncommittedEvents.addAll(events);
     }
 
@@ -36,8 +36,8 @@ public class CommandHandlingResult {
     }
 
     @Nonnull
-    public Optional<? extends Entity<? extends EntityId<?>>> maybeEntity() {
-        return Optional.ofNullable(capturedEntity);
+    public Optional<E> maybeEntityRoot() {
+        return Optional.ofNullable(capturedEntityRoot);
     }
 
     @Nonnull
