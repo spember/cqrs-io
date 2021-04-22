@@ -1,7 +1,6 @@
 package io.cqrs.kt.librarymanager.core.commands
 
-import io.cqrs.core.DefaultCommand
-import io.cqrs.kt.librarymanager.core.book.PublishedBook
+import io.cqrs.core.Command
 import io.cqrs.kt.librarymanager.core.identifiers.LibraryId
 import io.cqrs.kt.librarymanager.core.identifiers.LibraryStaffId
 import java.time.Instant
@@ -13,7 +12,7 @@ class DonateBooksToLibrary(
     userId: LibraryStaffId,
     val libraryId: LibraryId,
     val books: List<CommandRow>
-    ): DefaultCommand<LibraryStaffId>(userId, Instant.now()) {
+    ): Command<LibraryStaffId>(userId, Instant.now()) {
         class CommandRow(val isbn: String, val copies: Int = 1)
 
         fun totalCopies(): Int =

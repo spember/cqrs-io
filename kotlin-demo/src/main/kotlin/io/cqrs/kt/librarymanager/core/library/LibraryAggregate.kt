@@ -1,7 +1,7 @@
 package io.cqrs.kt.librarymanager.core.library
 
 import io.cqrs.core.Aggregate
-import io.cqrs.core.Command
+import io.cqrs.core.CqrsCommand
 import io.cqrs.core.CommandHandlingResult
 import io.cqrs.core.event.EventFactory
 import io.cqrs.core.event.EventRepository
@@ -30,7 +30,7 @@ class LibraryAggregate(libraryId: LibraryId): Aggregate {
         return this
     }
 
-    fun handle(command: Command<out UserId<*>>): CommandHandlingResult<Library> {
+    fun handle(command: CqrsCommand<out UserId<*>>): CommandHandlingResult<Library> {
         return when (command) {
             is FoundLibrary -> handle(command)
             is DonateBooksToLibrary -> handle(command)

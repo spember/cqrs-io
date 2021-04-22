@@ -4,7 +4,7 @@ import io.cqrs.core.identifiers.EntityId;
 
 import javax.annotation.Nonnull;
 
-public class EventEnvelope<V extends Event, EI extends EntityId> {
+public class EventEnvelope<V extends Event, EI extends EntityId<?>> {
 
     private final V event;
     private final EventCoreData<EI> eventCoreData;

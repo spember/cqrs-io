@@ -1,7 +1,7 @@
 package io.cqrs.core.furniture.sofa;
 
 import io.cqrs.core.Aggregate;
-import io.cqrs.core.Command;
+import io.cqrs.core.CqrsCommand;
 import io.cqrs.core.CommandHandlingResult;
 import io.cqrs.core.event.EventFactory;
 import io.cqrs.core.event.EventRepository;
@@ -32,7 +32,7 @@ public class SofaAggregate implements Aggregate {
     }
 
     @Nonnull
-    public CommandHandlingResult<Sofa> handle(final Command command) {
+    public CommandHandlingResult<Sofa> handle(final CqrsCommand command) {
         if (command instanceof CreateNewSofa) {
             return createNewSofa((CreateNewSofa)command);
         } else if (command instanceof AddLegs) {

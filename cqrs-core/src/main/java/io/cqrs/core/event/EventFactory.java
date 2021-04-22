@@ -1,9 +1,10 @@
 package io.cqrs.core.event;
 
-import io.cqrs.core.Command;
+import io.cqrs.core.CqrsCommand;
 import io.cqrs.core.CommandHandlingResult;
 import io.cqrs.core.CqrsEntity;
 import io.cqrs.core.identifiers.EntityId;
+import io.cqrs.core.identifiers.UserId;
 
 import javax.annotation.Nonnull;
 import java.time.Instant;
@@ -14,10 +15,10 @@ import java.util.List;
  * Used to streamline the generation of new Events during the handling of a Command. Completely optional
  * but is intended to be useful in cutting down on boiler plate code.
  */
-public class EventFactory<C extends Command, EI extends EntityId<?>, E extends CqrsEntity<EI>> {
+public class EventFactory<C extends CqrsCommand, EI extends EntityId<?>, E extends CqrsEntity<EI>> {
 
-    private E entity;
-    private C sourceCommand;
+    private final E entity;
+    private final C sourceCommand;
     private final List<EventEnvelope<? extends Event, ? extends EntityId<?>>> eventEnvelopes = new ArrayList<>();
 
     public EventFactory(@Nonnull final C sourceCommand, @Nonnull final E entity) {
@@ -56,7 +57,6 @@ public class EventFactory<C extends Command, EI extends EntityId<?>, E extends C
 
     @Nonnull
     public CommandHandlingResult<E> toUncommittedEventsResult() {
-        System.out.println("About to write an entity" + entity);
         return new CommandHandlingResult<E>(entity, getEventEnvelopes());
     }
 }
