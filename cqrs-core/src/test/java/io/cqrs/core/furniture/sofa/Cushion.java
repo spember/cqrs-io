@@ -1,15 +1,13 @@
 package io.cqrs.core.furniture.sofa;
 
-import io.cqrs.core.DefaultEntity;
+import io.cqrs.core.Entity;
 import io.cqrs.core.event.Event;
-import io.cqrs.core.event.EventApplier;
 import io.cqrs.core.event.EventEnvelope;
 import io.cqrs.core.identifiers.EntityId;
 
 import javax.annotation.Nonnull;
-import java.util.Map;
 
-public class Cushion extends DefaultEntity<CushionId> {
+public class Cushion extends Entity<CushionId> {
 
     private Position position = Position.NOT_CHOSEN;
     private int timesSatOn = 0;

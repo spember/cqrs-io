@@ -29,7 +29,7 @@ class LibraryController(
 
     @Get(value="/{libraryId}")
     fun checkoutBook(@PathVariable libraryId: String): LibraryResponse? {
-        val aggregate = LibraryAggregate(LibraryId(libraryId), eventRepository)
+        val aggregate = LibraryAggregate(LibraryId(libraryId)).loadCurrentState(eventRepository)
         return if (aggregate.root.isBare) {
             null
         } else {

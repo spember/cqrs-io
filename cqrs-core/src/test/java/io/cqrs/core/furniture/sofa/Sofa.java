@@ -1,18 +1,15 @@
 package io.cqrs.core.furniture.sofa;
 
-import io.cqrs.core.AggregateRoot;
-import io.cqrs.core.DefaultEntity;
+import io.cqrs.core.Entity;
 import io.cqrs.core.event.Event;
-import io.cqrs.core.event.EventApplier;
 import io.cqrs.core.event.EventEnvelope;
 import io.cqrs.core.identifiers.EntityId;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-public class Sofa extends DefaultEntity<SofaId> implements AggregateRoot {
+public class Sofa extends Entity<SofaId> {
 
     private int numLegs = 0;
     private int numSeats = 0;

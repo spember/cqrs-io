@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class CommandHandlingResult<E extends Entity<? extends EntityId<?>>> {
+public class CommandHandlingResult<E extends CqrsEntity<? extends EntityId<?>>> {
 
     private Exception capturedError;
 

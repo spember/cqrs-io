@@ -14,7 +14,7 @@ import java.lang.RuntimeException
 /**
  *
  */
-class LibraryAggregate(libraryId: LibraryId, private val eventRepository: EventRepository): Aggregate {
+class LibraryAggregate(libraryId: LibraryId): Aggregate {
 
     // note that this library is meant to be fairly modular, in the sense that not every mechanism *needs* to be used
     // ... a loosely coupled framework. For example, one doesn't need to use this Aggregate concept - all of this
@@ -22,11 +22,7 @@ class LibraryAggregate(libraryId: LibraryId, private val eventRepository: EventR
 
     val root: Library = Library(libraryId)
 
-    init {
-        loadCurrentState()
-    }
-
-    override fun loadCurrentState(): LibraryAggregate {
+    override fun loadCurrentState(eventRepository: EventRepository): LibraryAggregate {
         eventRepository.listAllForEntity(this.root.id)
             .fold(root, { library, eventEnvelope ->
                 library.apply(eventEnvelope) as Library
@@ -34,7 +30,7 @@ class LibraryAggregate(libraryId: LibraryId, private val eventRepository: EventR
         return this
     }
 
-    override fun handle(command: Command<out UserId<*>>): CommandHandlingResult<Library> {
+    fun handle(command: Command<out UserId<*>>): CommandHandlingResult<Library> {
         return when (command) {
             is FoundLibrary -> handle(command)
             is DonateBooksToLibrary -> handle(command)

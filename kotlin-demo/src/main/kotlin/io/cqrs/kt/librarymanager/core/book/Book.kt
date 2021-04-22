@@ -1,6 +1,6 @@
 package io.cqrs.kt.librarymanager.core.book
 
-import io.cqrs.core.DefaultEntity
+import io.cqrs.core.Entity
 import io.cqrs.core.event.Event
 import io.cqrs.core.event.EventEnvelope
 import io.cqrs.core.identifiers.EntityId
@@ -14,7 +14,7 @@ import java.time.Instant
  *
  *
  */
-class Book(id: BookId): DefaultEntity<BookId>(id) {
+class Book(id: BookId): Entity<BookId>(id) {
     // only capture state changes... e.g. the number of pages, the author won't change, and could eventually be
     // encapsulated in a Value object called ISBN or something
 

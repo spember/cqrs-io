@@ -25,8 +25,8 @@ public class GeneralServiceLifecycleTest {
     private UserId<String> me = new UserId<>("tester@test.com");
 
     @Test
-    void testCreate(EventRepository eventRepository) {
-        SofaAggregate sofaAggregate = new SofaAggregate(eventRepository, new SofaId("red-1"));
+    void testCreate() {
+        SofaAggregate sofaAggregate = new SofaAggregate(new SofaId("red-1"));
         CommandHandlingResult result = sofaAggregate.createNewSofa(
                 new CreateNewSofa<>(
                 me,
@@ -42,7 +42,7 @@ public class GeneralServiceLifecycleTest {
     @Test
     void testCreationAndReloading(EventRepository eventRepository) {
         SofaId redSofa = new SofaId("red-2");
-        SofaAggregate sofaAggregate = new SofaAggregate(eventRepository, redSofa);
+        SofaAggregate sofaAggregate = new SofaAggregate(redSofa);
         CommandHandlingResult result = sofaAggregate.createNewSofa(
                 new CreateNewSofa<>(
                         me,
@@ -56,10 +56,10 @@ public class GeneralServiceLifecycleTest {
                 sofaAggregate.addLegs(new AddLegs<>(me, Instant.now(), 4)).getUncommittedEvents()
         );
 
-        SofaAggregate check = new SofaAggregate(eventRepository, redSofa);
+        SofaAggregate check = new SofaAggregate(redSofa);
         assertThat(check.getRoot().getRevision()).isEqualTo(0);
 
-        check.loadCurrentState();
+        check.loadCurrentState(eventRepository);
         assertThat(check.getRoot().getRevision()).isEqualTo(5);
         assertThat(check.getRoot().getNumLegs()).isEqualTo(8);
         assertThat(check.getRoot().getNumSeats()).isEqualTo(2);

@@ -1,6 +1,6 @@
 package io.cqrs.kt.librarymanager.core.library
 
-import io.cqrs.core.DefaultEntity
+import io.cqrs.core.Entity
 import io.cqrs.core.event.Event
 import io.cqrs.core.event.EventEnvelope
 import io.cqrs.core.identifiers.EntityId
@@ -11,7 +11,7 @@ import java.time.Instant
  * The Entity that represents the Library that is being managed by this application. The demo
  * assumes that all actions pertain to one library (e.g. not multi-tenant).
  */
-class Library(id: LibraryId): DefaultEntity<LibraryId>(id) {
+class Library(id: LibraryId): Entity<LibraryId>(id) {
 
     var libraryName = ""
         private set

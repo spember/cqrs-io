@@ -13,12 +13,9 @@ import javax.annotation.Nonnull;
 
 public class SofaAggregate implements Aggregate {
 
-    private final EventRepository eventRepository;
-
     private final Sofa root;
 
-    public SofaAggregate(final EventRepository eventRepository, final SofaId sofaId) {
-        this.eventRepository = eventRepository;
+    public SofaAggregate(final SofaId sofaId) {
         this.root = new Sofa(sofaId);
     }
 
@@ -28,14 +25,13 @@ public class SofaAggregate implements Aggregate {
 
     @Nonnull
     @Override
-    public SofaAggregate loadCurrentState() {
+    public SofaAggregate loadCurrentState(final EventRepository eventRepository) {
         eventRepository.listAllForEntity(root.getId())
                 .forEach(root::apply);
         return this;
     }
 
     @Nonnull
-    @Override
     public CommandHandlingResult<Sofa> handle(final Command command) {
         if (command instanceof CreateNewSofa) {
             return createNewSofa((CreateNewSofa)command);

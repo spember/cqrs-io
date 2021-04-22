@@ -21,7 +21,7 @@ class LibraryService(
     ) {
 
     fun handle(command: FoundLibrary): CommandHandlingResult<Library> = withResult {
-            LibraryAggregate(command.requestedId, eventRepository)
+            LibraryAggregate(command.requestedId).loadCurrentState(eventRepository)
                 .handle(command)
         }
 
@@ -40,7 +40,7 @@ class LibraryService(
             log.error("Incoming request had ${command.books.size} isbns, but only ${bookLookup.keys.size} were found")
             CommandHandlingResult<Library>(RuntimeException("Invalid isbns present"))
         } else {
-            LibraryAggregate(command.libraryId, eventRepository)
+            LibraryAggregate(command.libraryId).loadCurrentState(eventRepository)
                 .handle(command)
         }
         }

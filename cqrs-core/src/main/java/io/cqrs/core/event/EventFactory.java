@@ -2,7 +2,7 @@ package io.cqrs.core.event;
 
 import io.cqrs.core.Command;
 import io.cqrs.core.CommandHandlingResult;
-import io.cqrs.core.Entity;
+import io.cqrs.core.CqrsEntity;
 import io.cqrs.core.identifiers.EntityId;
 
 import javax.annotation.Nonnull;
@@ -14,7 +14,7 @@ import java.util.List;
  * Used to streamline the generation of new Events during the handling of a Command. Completely optional
  * but is intended to be useful in cutting down on boiler plate code.
  */
-public class EventFactory<C extends Command, EI extends EntityId<?>, E extends Entity<EI>> {
+public class EventFactory<C extends Command, EI extends EntityId<?>, E extends CqrsEntity<EI>> {
 
     private E entity;
     private C sourceCommand;

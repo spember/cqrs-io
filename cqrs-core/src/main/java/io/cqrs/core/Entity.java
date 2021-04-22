@@ -3,32 +3,57 @@ package io.cqrs.core;
 import io.cqrs.core.event.Event;
 import io.cqrs.core.event.EventEnvelope;
 import io.cqrs.core.exceptions.EventsOutOfOrderException;
+import io.cqrs.core.exceptions.IncorrectTargetException;
 import io.cqrs.core.identifiers.EntityId;
 
 import javax.annotation.Nonnull;
 
 /**
- * An Entity represents some object which has a lifecycle. It grows and changes over time. It is important and these
- * state changes are key to your system.
+ * Suggest class to extend. The Entity provides basic functionality that each entity needs to help with ensuring
+ * proper Event ordering during application
  *
  * @param <EI>
  */
-public interface Entity<EI extends EntityId> {
+public abstract class Entity<EI extends EntityId<?>> implements CqrsEntity<EI> {
+
+    protected EI id;
+    protected int revision = 0;
+
+    public Entity(@Nonnull final EI id) {
+        this.id = id;
+    }
 
     @Nonnull
-    EI getId();
+    @Override
+    public EI getId() {
+        return id;
+    }
 
-    int getRevision();
+    @Override
+    public int getRevision() {
+        return revision;
+    }
 
-    /**
-     * An Entity is 'bare' if either a) it has no events applied to it yet (e.g. the code has just created the object).
-     * This is used to signify that an Entity can be loaded (e.g. to current state) or if it is brand new during the
-     * creation process.
-     *
-     * @return true if 'bare', false otherwise
-     */
-    boolean isBare();
+    @Override
+    public boolean isBare() {
+        return revision == 0;
+    }
 
     @Nonnull
-    Entity<EI> apply(@Nonnull final EventEnvelope<? extends Event, ? extends EntityId<?>> envelope) throws EventsOutOfOrderException;
+    @Override
+    public CqrsEntity<EI> apply(@Nonnull final EventEnvelope<? extends Event, ? extends EntityId<?>> envelope) throws EventsOutOfOrderException {
+        if (!envelope.getEventCoreData().getEntityId().equals(this.id)) {
+            throw new IncorrectTargetException("Attempted to apply an event meant for " +
+                    (envelope.getEventCoreData().getEntityId()) + " to this entity, " + this.id);
+        }
+        if (envelope.getEventCoreData().getRevision() != this.revision+1) {
+            throw new EventsOutOfOrderException("Expecting revision " + (this.revision+1) +" but instead received " +
+                    envelope.getEventCoreData().getRevision());
+        }
+        revision = envelope.getEventCoreData().getRevision();
+        handleEventApply(envelope);
+        return this;
+    }
+
+    abstract protected void handleEventApply(@Nonnull final EventEnvelope<? extends Event, ? extends EntityId<?>> envelope);
 }
