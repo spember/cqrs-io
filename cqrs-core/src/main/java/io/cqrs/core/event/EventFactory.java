@@ -25,6 +25,9 @@ public class EventFactory<C extends CqrsCommand, EI extends EntityId<?>, E exten
         this.entity = entity;
         this.sourceCommand = sourceCommand;
     }
+    // todo: Update command to produce this classs
+    // todo: remove mention of command from this class
+
 
     /**
      * Add an event to the current uncommitted batch and apply it to the Entity.

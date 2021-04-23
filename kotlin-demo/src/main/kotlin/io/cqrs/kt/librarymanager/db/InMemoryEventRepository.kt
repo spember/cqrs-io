@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory
 class InMemoryEventRepository: EventRepository {
     private val journal = mutableListOf<EventEnvelope<out Event, out EntityId<*>>>()
 
-    override fun <T : Any?, EI : EntityId<T>?> listAllForEntity(entityId: EI): List<EventEnvelope<out Event, out EntityId<*>>> =
+    override fun <EI : EntityId<*>> listAllForEntity(entityId: EI): List<EventEnvelope<out Event, out EntityId<*>>> =
         journal
             .filter { eventEnvelope -> eventEnvelope.eventCoreData.entityId == entityId }
             .sortedBy { eventEnvelope -> eventEnvelope.eventCoreData.revision }

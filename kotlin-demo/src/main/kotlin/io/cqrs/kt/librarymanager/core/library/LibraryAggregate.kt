@@ -1,6 +1,6 @@
 package io.cqrs.kt.librarymanager.core.library
 
-import io.cqrs.core.Aggregate
+import io.cqrs.core.CqrsAggregate
 import io.cqrs.core.CqrsCommand
 import io.cqrs.core.CommandHandlingResult
 import io.cqrs.core.event.EventFactory
@@ -14,7 +14,7 @@ import java.lang.RuntimeException
 /**
  *
  */
-class LibraryAggregate(libraryId: LibraryId): Aggregate {
+class LibraryAggregate(libraryId: LibraryId): CqrsAggregate {
 
     // note that this library is meant to be fairly modular, in the sense that not every mechanism *needs* to be used
     // ... a loosely coupled framework. For example, one doesn't need to use this Aggregate concept - all of this

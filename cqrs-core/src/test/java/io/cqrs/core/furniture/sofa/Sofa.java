@@ -1,6 +1,6 @@
 package io.cqrs.core.furniture.sofa;
 
-import io.cqrs.core.Entity;
+import io.cqrs.core.Aggregate;
 import io.cqrs.core.event.Event;
 import io.cqrs.core.event.EventEnvelope;
 import io.cqrs.core.identifiers.EntityId;
@@ -9,7 +9,7 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Sofa extends Entity<SofaId> {
+public class Sofa extends Aggregate<SofaId> {
 
     private int numLegs = 0;
     private int numSeats = 0;

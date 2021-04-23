@@ -1,6 +1,6 @@
 package io.cqrs.core.furniture.sofa;
 
-import io.cqrs.core.Aggregate;
+import io.cqrs.core.CqrsAggregate;
 import io.cqrs.core.CqrsCommand;
 import io.cqrs.core.CommandHandlingResult;
 import io.cqrs.core.event.EventFactory;
@@ -11,7 +11,7 @@ import io.cqrs.core.furniture.commands.CreateNewSofa;
 import javax.annotation.Nonnull;
 
 
-public class SofaAggregate implements Aggregate {
+public class SofaAggregate implements CqrsAggregate {
 
     private final Sofa root;
 

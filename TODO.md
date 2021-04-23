@@ -23,6 +23,16 @@ New thoughts... Aggregates:
 * if a dependency is needed (e.g. another repository or a specific other Agg), it is 
  passed as an argument
 * command handling logic goes in a service
+* meaningful functions in the aggregate return events... or errors? EntityModificationResult
+
+
+Flow:
+1. service boundary class receives command
+2. loads relevant Aggregate(s)
+3. aggregates return events or errors, and do not mutate
+4. events converted via factory to envelopes and saved
+
+is it a concern that the entity may not mutate until before persisting of events?
 
 
 

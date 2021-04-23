@@ -13,7 +13,7 @@ public class InMemoryEventRepository implements EventRepository {
 
     @Nonnull
     @Override
-    public <T, EI extends EntityId<T>> List<EventEnvelope<? extends Event, ? extends EntityId<?>>> listAllForEntity(@Nonnull final EI entityId) {
+    public <EI extends EntityId<?>> List<EventEnvelope<? extends Event, ? extends EntityId<?>>> listAllForEntity(@Nonnull final EI entityId) {
         return eventStore.stream()
                 .filter(eventEnvelope -> eventEnvelope.getEventCoreData().getEntityId().equals(entityId))
                 .collect(Collectors.toList());
