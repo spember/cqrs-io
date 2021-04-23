@@ -1,6 +1,7 @@
 package io.cqrs.core.furniture.sofa;
 
 import io.cqrs.core.Aggregate;
+import io.cqrs.core.AggregateMutationResult;
 import io.cqrs.core.event.Event;
 import io.cqrs.core.event.EventEnvelope;
 import io.cqrs.core.identifiers.EntityId;
@@ -20,6 +21,35 @@ public class Sofa extends Aggregate<SofaId> {
 
     public Sofa(@Nonnull final SofaId id) {
         super(id);
+    }
+
+    public AggregateMutationResult assemble(final String name, final int numLegs, final int numSeats) {
+        if (!this.isBare()) {
+            return new AggregateMutationResult(new RuntimeException("Cannot re-assemble a sofa"));
+        }
+        // check for legs and cushion ratios?
+        AggregateMutationResult events = new AggregateMutationResult(
+                new EntityCreated(),
+                new NameUpdated(name),
+                new LegsAdded(numLegs)
+        );
+        for (int i =0; i < numSeats; i++) {
+            events.addEvent(new SeatsAdded());
+        }
+        return events;
+    }
+
+    public AggregateMutationResult addMoreLegs(final int legsToAdd) {
+        if (this.isBare()) {
+            return new AggregateMutationResult(new RuntimeException("Cannot be applied on a bare sofa"));
+        }
+        //  A trivial check: ensure that legs are not odd. The idea is to show that a command should be
+        // evaluated such that it doesn't put the Entity into an invalid state
+        if ((this.getNumLegs() + legsToAdd) % 2 == 1) {
+            return new AggregateMutationResult(new RuntimeException("Cannot have an odd number of legs!"));
+        }
+
+        return new AggregateMutationResult(new LegsAdded(legsToAdd));
     }
 
     @Override

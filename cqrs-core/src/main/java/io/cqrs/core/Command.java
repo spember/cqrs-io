@@ -1,5 +1,7 @@
 package io.cqrs.core;
 
+import io.cqrs.core.event.EventFactory;
+import io.cqrs.core.identifiers.EntityId;
 import io.cqrs.core.identifiers.UserId;
 
 import javax.annotation.Nonnull;
