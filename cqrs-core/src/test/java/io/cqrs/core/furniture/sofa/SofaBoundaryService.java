@@ -1,11 +1,12 @@
 package io.cqrs.core.furniture.sofa;
 
-import io.cqrs.core.AggregateMutationResult;
-import io.cqrs.core.CommandHandlingResult;
+import io.cqrs.core.process.AggregateMutationResult;
+import io.cqrs.core.process.CommandHandlingResult;
 import io.cqrs.core.event.EventFactory;
 import io.cqrs.core.event.EventRepository;
 import io.cqrs.core.furniture.commands.AddLegs;
 import io.cqrs.core.furniture.commands.CreateNewSofa;
+import io.cqrs.core.process.CommandProcessor;
 
 import java.util.ArrayList;
 
@@ -27,37 +28,50 @@ public class SofaBoundaryService {
     }
 
     public CommandHandlingResult<Sofa> createNewSofa(final CreateNewSofa command ) {
-        Sofa sofa = new Sofa(new SofaId(command.getSku()));
-        sofa.loadCurrentState(eventRepository);
-        AggregateMutationResult result = sofa.assemble(
-                command.getDescription(),
-                command.getNumLegs(),
-                command.getNumSeats()
-        );
-        if (result.maybeError().isPresent()) {
-            return new CommandHandlingResult<>(result.maybeError().get());
-        }
-
-        EventFactory<CreateNewSofa, SofaId, Sofa> eventFactory = new EventFactory<>(command, sofa);
-        result.getUncommittedEvents().forEach(eventFactory::addNext);
-        eventRepository.write(eventFactory.getEventEnvelopes());
-        return new CommandHandlingResult<>(sofa, new ArrayList<>());
+        return new CommandProcessor<>(eventRepository, command)
+                .handle(new Sofa(new SofaId(command.getSku())), sofa ->
+                    sofa.assemble(
+                            command.getDescription(),
+                            command.getNumLegs(),
+                            command.getNumSeats()
+                    )
+                );
+//        Sofa sofa = new Sofa(new SofaId(command.getSku()))
+//                .loadCurrentState(eventRepository);
+//        AggregateMutationResult<Sofa> result = sofa.assemble(
+//                command.getDescription(),
+//                command.getNumLegs(),
+//                command.getNumSeats()
+//        );
+//        if (result.maybeError().isPresent()) {
+//            return new CommandHandlingResult<>(result.maybeError().get());
+//        }
+//
+//        EventFactory<CreateNewSofa, Sofa> eventFactory = new EventFactory<>(command,
+//                result.getCapturedAggregate());
+//        result.getUncommittedEvents().forEach(eventFactory::addNext);
+//        eventRepository.write(eventFactory.getEventEnvelopes());
+//        return new CommandHandlingResult<>(sofa, new ArrayList<>());
     }
 
     public CommandHandlingResult<Sofa> addLegsToSofa(final SofaId sofaId, final AddLegs command ) {
-        Sofa sofa = new Sofa(sofaId);
-        sofa.loadCurrentState(eventRepository);
-        AggregateMutationResult result = sofa.addMoreLegs(
-                command.getRequestedLegs()
-        );
-        if (result.maybeError().isPresent()) {
-            return new CommandHandlingResult<>(result.maybeError().get());
-        }
-
-        EventFactory<AddLegs, SofaId, Sofa> eventFactory = new EventFactory<>(command, sofa);
-        result.getUncommittedEvents().forEach(eventFactory::addNext);
-        eventRepository.write(eventFactory.getEventEnvelopes());
-        return new CommandHandlingResult<>(sofa, new ArrayList<>());
+        return new CommandProcessor<>(eventRepository, command)
+                .handle(new Sofa(sofaId), sofa ->
+                        sofa.addMoreLegs(command.getRequestedLegs())
+                );
+//        Sofa sofa = new Sofa(sofaId)
+//                .loadCurrentState(eventRepository);
+//        AggregateMutationResult<Sofa> result = sofa.addMoreLegs(
+//                command.getRequestedLegs()
+//        );
+//        if (result.maybeError().isPresent()) {
+//            return new CommandHandlingResult<>(result.maybeError().get());
+//        }
+//
+//        EventFactory<AddLegs, Sofa> eventFactory = new EventFactory<>(command, sofa);
+//        result.getUncommittedEvents().forEach(eventFactory::addNext);
+//        eventRepository.write(eventFactory.getEventEnvelopes());
+//        return new CommandHandlingResult<>(sofa, new ArrayList<>());
     }
 
 

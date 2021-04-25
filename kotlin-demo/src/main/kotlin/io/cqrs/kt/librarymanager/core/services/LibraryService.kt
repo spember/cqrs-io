@@ -1,6 +1,6 @@
 package io.cqrs.kt.librarymanager.core.services
 
-import io.cqrs.core.CommandHandlingResult
+import io.cqrs.core.process.CommandHandlingResult
 import io.cqrs.core.event.EventRepository
 import io.cqrs.kt.librarymanager.core.book.PublishedBook
 import io.cqrs.kt.librarymanager.core.book.PublishedBookRepository

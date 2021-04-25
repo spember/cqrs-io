@@ -2,7 +2,7 @@ package io.cqrs.kt.librarymanager.core.library
 
 import io.cqrs.core.CqrsAggregate
 import io.cqrs.core.CqrsCommand
-import io.cqrs.core.CommandHandlingResult
+import io.cqrs.core.process.CommandHandlingResult
 import io.cqrs.core.event.EventFactory
 import io.cqrs.core.event.EventRepository
 import io.cqrs.core.identifiers.UserId

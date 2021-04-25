@@ -1,12 +1,12 @@
 package io.cqrs.core;
 
+import io.cqrs.core.process.CommandHandlingResult;
 import io.cqrs.core.event.EventRepository;
 import io.cqrs.core.event.EventRepositoryResolver;
 import io.cqrs.core.furniture.commands.AddLegs;
 import io.cqrs.core.furniture.commands.CreateNewSofa;
 import io.cqrs.core.furniture.sofa.FurnitureMakerId;
 import io.cqrs.core.furniture.sofa.Sofa;
-import io.cqrs.core.furniture.sofa.SofaAggregate;
 import io.cqrs.core.furniture.sofa.SofaBoundaryService;
 import io.cqrs.core.furniture.sofa.SofaId;
 import org.junit.jupiter.api.Test;

@@ -1,6 +1,6 @@
 package io.cqrs.kt.librarymanager.app
 
-import io.cqrs.core.CommandHandlingResult
+import io.cqrs.core.process.CommandHandlingResult
 import io.cqrs.kt.librarymanager.core.commands.FoundLibrary
 import io.cqrs.kt.librarymanager.core.identifiers.LibraryId
 import io.cqrs.kt.librarymanager.core.identifiers.LibraryStaffId

@@ -1,5 +1,6 @@
-package io.cqrs.core;
+package io.cqrs.core.process;
 
+import io.cqrs.core.CqrsEntity;
 import io.cqrs.core.event.Event;
 import io.cqrs.core.event.EventEnvelope;
 import io.cqrs.core.identifiers.EntityId;

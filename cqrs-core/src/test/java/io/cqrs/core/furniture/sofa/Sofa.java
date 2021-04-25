@@ -1,9 +1,10 @@
 package io.cqrs.core.furniture.sofa;
 
 import io.cqrs.core.Aggregate;
-import io.cqrs.core.AggregateMutationResult;
+import io.cqrs.core.process.AggregateMutationResult;
 import io.cqrs.core.event.Event;
 import io.cqrs.core.event.EventEnvelope;
+import io.cqrs.core.event.EventRepository;
 import io.cqrs.core.identifiers.EntityId;
 
 import javax.annotation.Nonnull;
@@ -23,12 +24,18 @@ public class Sofa extends Aggregate<SofaId> {
         super(id);
     }
 
-    public AggregateMutationResult assemble(final String name, final int numLegs, final int numSeats) {
+    @Nonnull
+    @Override
+    public Sofa loadCurrentState(final EventRepository eventRepository) {
+        return (Sofa)super.loadCurrentState(eventRepository);
+    }
+
+    public AggregateMutationResult<Sofa> assemble(final String name, final int numLegs, final int numSeats) {
         if (!this.isBare()) {
-            return new AggregateMutationResult(new RuntimeException("Cannot re-assemble a sofa"));
+            return new AggregateMutationResult<>(this, new RuntimeException("Cannot re-assemble a sofa"));
         }
         // check for legs and cushion ratios?
-        AggregateMutationResult events = new AggregateMutationResult(
+        AggregateMutationResult<Sofa> events = new AggregateMutationResult<>(this,
                 new EntityCreated(),
                 new NameUpdated(name),
                 new LegsAdded(numLegs)
@@ -39,17 +46,17 @@ public class Sofa extends Aggregate<SofaId> {
         return events;
     }
 
-    public AggregateMutationResult addMoreLegs(final int legsToAdd) {
+    public AggregateMutationResult<Sofa> addMoreLegs(final int legsToAdd) {
         if (this.isBare()) {
-            return new AggregateMutationResult(new RuntimeException("Cannot be applied on a bare sofa"));
+            return new AggregateMutationResult<>(this, new RuntimeException("Cannot be applied on a bare sofa"));
         }
         //  A trivial check: ensure that legs are not odd. The idea is to show that a command should be
         // evaluated such that it doesn't put the Entity into an invalid state
         if ((this.getNumLegs() + legsToAdd) % 2 == 1) {
-            return new AggregateMutationResult(new RuntimeException("Cannot have an odd number of legs!"));
+            return new AggregateMutationResult<>(this, new RuntimeException("Cannot have an odd number of legs!"));
         }
 
-        return new AggregateMutationResult(new LegsAdded(legsToAdd));
+        return new AggregateMutationResult<>(this, new LegsAdded(legsToAdd));
     }
 
     @Override
