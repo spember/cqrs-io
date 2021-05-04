@@ -17,7 +17,7 @@ public class AggregateMutationResult<A extends Aggregate<? extends EntityId<?>>>
     /*
     Typically, you're going to return Events on success and an error on failure,
     and as a personal stylistic approach I don't like throwing exceptions for accounted for
-    errors, and prefer to react and handle them as part of normal control flow, rather than
+    errors, and prefer to react and with them as part of normal control flow, rather than
     raising exceptions.
      */
 

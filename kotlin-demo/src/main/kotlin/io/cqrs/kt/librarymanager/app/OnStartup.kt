@@ -26,7 +26,7 @@ class OnStartup(@Inject private val libraryService: LibraryService): Application
             "The Testtown Regional Library",
             100
         ))
-        log.info("Created Library ${result.maybeEntityRoot().get().libraryName}")
+        log.info("Created Library ${result.maybeAggregate().get().libraryName}")
     }
 
     companion object {

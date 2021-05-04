@@ -40,8 +40,8 @@ public class GeneralServiceLifecycleTest {
         );
 
         assertThat(result.maybeError().isPresent()).isFalse();
-        assertThat(result.maybeEntityRoot().isPresent()).isTrue();
-        Sofa check = result.maybeEntityRoot().get();
+        assertThat(result.maybePayload().isPresent()).isTrue();
+        Sofa check = result.maybePayload().get();
         assertThat(check.getNumLegs()).isEqualTo(6);
         assertThat(check.getPublicName()).isEqualTo("My blue sofa");
     }

@@ -25,13 +25,10 @@ public class EventFactory<C extends CqrsCommand<? extends UserId<?>>, E extends 
         this.entity = entity;
         this.sourceCommand = sourceCommand;
     }
-    // todo: Update command to produce this classs
-    // todo: remove mention of command from this class
-
 
     /**
      * Add an event to the current uncommitted batch and apply it to the Entity.
-     * Will handle the creation of the EventCoreData and Event Envelope for you.
+     * Will with the creation of the EventCoreData and Event Envelope for you.
      *
      * @param nextEvent The next {@link Event} in the sequence
      * @return this Factory
@@ -56,10 +53,5 @@ public class EventFactory<C extends CqrsCommand<? extends UserId<?>>, E extends 
     @Nonnull
     public List<EventEnvelope<? extends Event, ? extends EntityId<?>>> getEventEnvelopes() {
         return eventEnvelopes;
-    }
-
-    @Nonnull
-    public CommandHandlingResult<E> toUncommittedEventsResult() {
-        return new CommandHandlingResult<E>(entity, getEventEnvelopes());
     }
 }
