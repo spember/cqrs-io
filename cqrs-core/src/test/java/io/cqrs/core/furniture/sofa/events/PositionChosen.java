@@ -1,6 +1,7 @@
-package io.cqrs.core.furniture.sofa;
+package io.cqrs.core.furniture.sofa.events;
 
 import io.cqrs.core.event.Event;
+import io.cqrs.core.furniture.sofa.Cushion;
 
 public class PositionChosen implements Event {
     private final Cushion.Position position;

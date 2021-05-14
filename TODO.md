@@ -17,7 +17,7 @@ New thoughts... Aggregates:
 * are just entities that are important or first-class
 * may have other entities, but those must not be able to live by themselves 
 * know how to load their (and children) states
-* have meaningful method names, like commands (e.g. addBook). Do NOT ACCEPT COMMANDs
+* have meaningful method names, like commands (e.g. addBook).
 * methods ensure that if an Aggregate changes, its state is always 'good'
 * methods return events
 * if a dependency is needed (e.g. another repository or a specific other Agg), it is 
@@ -32,8 +32,13 @@ Flow:
 3. aggregates return events or errors, and do not mutate
 4. events converted via factory to envelopes and saved
 
-is it a concern that the entity may not mutate until before persisting of events?
+Ok new plan:
 
-
+* update readme to contain basic flow between layers
+* aggregate functions are expected to mutate themselves and return the state changes.
+* aggregate functions are expected to *not* persist those events on their own 
+* it is not a hard and fast rule, but generally encouraged
+* as such, Aggregates should be passed the commands as instructions for mutation, and the AggregateMutationResult 
+maintains underlying EntityWithEvents objects, which in turn apply the event to the entity
 
 

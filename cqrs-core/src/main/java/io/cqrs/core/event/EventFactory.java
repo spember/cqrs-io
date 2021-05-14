@@ -16,7 +16,7 @@ import java.util.List;
  * but is intended to be useful in cutting down on boiler plate code.
  */
 public class EventFactory<C extends CqrsCommand<? extends UserId<?>>, E extends CqrsEntity<? extends EntityId<?>>> {
-
+    // todo: implements 'eventEnvelopeStore' in order to merge multiple later?
     private final E entity;
     private final C sourceCommand;
     private final List<EventEnvelope<? extends Event, ? extends EntityId<?>>> eventEnvelopes = new ArrayList<>();

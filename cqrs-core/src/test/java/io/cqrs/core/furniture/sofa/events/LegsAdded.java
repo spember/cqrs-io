@@ -1,4 +1,4 @@
-package io.cqrs.core.furniture.sofa;
+package io.cqrs.core.furniture.sofa.events;
 
 import io.cqrs.core.event.Event;
 

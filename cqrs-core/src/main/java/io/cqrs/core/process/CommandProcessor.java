@@ -10,7 +10,11 @@ import io.cqrs.core.identifiers.EntityId;
 import io.cqrs.core.identifiers.UserId;
 
 
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class CommandProcessor<C extends CqrsCommand<? extends UserId<?>>> {
@@ -27,36 +31,57 @@ public class CommandProcessor<C extends CqrsCommand<? extends UserId<?>>> {
     // collects responses, generates EventEnvelopes for the command and saves
     // if any of the AggregateMutationResults have an error, use that instead
 
+    // this is all some straight-forward, boring code. On purpose
+
+    /**
+     *
+     * @param aggregate
+     * @param logic
+     * @param <A>
+     * @return
+     */
     public <A extends Aggregate<?>> CommandHandlingResult<A> handle(
-            final A aggregate,
-            final Function<A, AggregateMutationResult<A>> logic
+        @Nonnull final A aggregate,
+        @Nonnull final Function<A, AggregateMutationResult<?, A>> logic
     ) {
         aggregate.loadCurrentState(eventRepository);
-        AggregateMutationResult<A> result = logic.apply(aggregate);
+        AggregateMutationResult<?, A> result = logic.apply(aggregate);
 
         if (result.maybeError().isPresent()) {
             return new CommandError<>(result.maybeError().get());
         } else {
-            eventRepository.write(generateEnvelopes(result));
+            eventRepository.write(result.getUncommittedEventEnvelopes());
             return new CommandSuccess<>(aggregate);
         }
     }
 
+    /**
+     *
+     * @param first
+     * @param second
+     * @param logic
+     * @param <A>
+     * @param <B>
+     * @return
+     */
+    public <A extends Aggregate<?>, B extends Aggregate<?>> CommandHandlingResult<List<? extends Aggregate<?>>> handle(
+        @Nonnull final A first,
+        @Nonnull final B second,
+        @Nonnull final BiFunction<A, B, Iterable<AggregateMutationResult<?, A>>> logic
+        ) {
 
-    private <BUNDLE> CommandHandlingResult<BUNDLE> processResults(
-        Iterable<AggregateMutationResult<?>> results,
-        Function<Iterable<AggregateMutationResult<?>>, BUNDLE> bundler ) {
+        first.loadCurrentState(eventRepository);
+        second.loadCurrentState(eventRepository);
 
-        return new CommandError<>(new RuntimeException("Not yet"));
+        List<EventEnvelope<? extends Event, ? extends EntityId<?>>> eventEnvelopes = new ArrayList<>();
+        for (AggregateMutationResult<?, A> result : logic.apply(first, second)) {
+            if (result.maybeError().isPresent()) {
+                return new CommandError<>(result.maybeError().get());
+            }
+            eventEnvelopes.addAll(result.getUncommittedEventEnvelopes());
+        }
+        eventRepository.write(eventEnvelopes);
+        return new CommandSuccess<>(Arrays.asList(first, second));
     }
-
-    private <A extends Aggregate<?>> List<EventEnvelope<? extends Event, ? extends EntityId<?>>> generateEnvelopes(
-        AggregateMutationResult<A> aggregateMutationResult
-    ) {
-        EventFactory<C, A> eventFactory = new EventFactory<>(capturedCommand, aggregateMutationResult.getCapturedAggregate());
-        aggregateMutationResult.getUncommittedEvents().forEach(eventFactory::addNext);
-        return eventFactory.getEventEnvelopes();
-    }
-
 
 }

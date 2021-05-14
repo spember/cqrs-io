@@ -9,6 +9,7 @@ import io.cqrs.core.furniture.sofa.FurnitureMakerId;
 import io.cqrs.core.furniture.sofa.Sofa;
 import io.cqrs.core.furniture.sofa.SofaBoundaryService;
 import io.cqrs.core.furniture.sofa.SofaId;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -28,8 +29,8 @@ public class GeneralServiceLifecycleTest {
 
     @Test
     void testCreate(EventRepository eventRepository) {
-        SofaBoundaryService service = new SofaBoundaryService(eventRepository);
-        CommandHandlingResult<Sofa> result = service.createNewSofa(
+        SofaBoundaryService sofaBoundaryService = new SofaBoundaryService(eventRepository);
+        CommandHandlingResult<Sofa> result = sofaBoundaryService.createNewSofa(
                 new CreateNewSofa(
                 me,
                 Instant.now().minus(1, ChronoUnit.DAYS),
@@ -48,25 +49,38 @@ public class GeneralServiceLifecycleTest {
 
     @Test
     void testCreationAndReloading(EventRepository eventRepository) {
-        SofaBoundaryService service = new SofaBoundaryService(eventRepository);
-
-        //SofaId redSofa = new SofaId("red-2");
-
-        CommandHandlingResult<Sofa> result = service.createNewSofa(
+        SofaBoundaryService sofaBoundaryService = new SofaBoundaryService(eventRepository);
+        sofaBoundaryService.createNewSofa(
                 new CreateNewSofa(
                         me,
                         Instant.now().minus(1, ChronoUnit.DAYS),
                         2,
                         4,
                         "red-2", "Big Red Sofa"));
-        service.addLegsToSofa(new SofaId("red-2"), new AddLegs(me, Instant.now(), 4));
+        sofaBoundaryService.addLegsToSofa(new SofaId("red-2"), new AddLegs(me, Instant.now(), 4));
 
         Sofa check = new Sofa(new SofaId("red-2"));
 
         assertThat(check.getRevision()).isEqualTo(0);
         check.loadCurrentState(eventRepository);
-        assertThat(check.getRevision()).isEqualTo(6);
+        assertThat(check.getRevision()).isEqualTo(5);
         assertThat(check.getNumLegs()).isEqualTo(8);
         assertThat(check.getNumSeats()).isEqualTo(2);
+    }
+
+    @Test
+    void testResultHandler(EventRepository eventRepository) {
+        SofaBoundaryService sofaBoundaryService = new SofaBoundaryService(eventRepository);
+        sofaBoundaryService.createNewSofa(new CreateNewSofa(
+            me,
+            Instant.now().minus(1, ChronoUnit.DAYS),
+            2,
+            4,
+            "red-2", "Big Red Sofa"))
+            .with(sofa -> {
+                assertThat(sofa.getRevision()).isEqualTo(4);
+                assertThat(sofa.getNumSeats()).isEqualTo(2);
+                assertThat(sofa.getNumLegs()).isEqualTo(4);
+            }, e -> {});
     }
 }

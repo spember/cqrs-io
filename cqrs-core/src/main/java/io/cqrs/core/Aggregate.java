@@ -13,7 +13,7 @@ public abstract class Aggregate<EI extends EntityId<?>> extends Entity<EI> imple
     @Nonnull
     @Override
     public Aggregate<EI> loadCurrentState(final EventRepository eventRepository) {
-        eventRepository.listAllForEntity(this.getId())
+        eventRepository.listAllByIds(this.getId())
                 .forEach(this::apply);
         return this;
     }

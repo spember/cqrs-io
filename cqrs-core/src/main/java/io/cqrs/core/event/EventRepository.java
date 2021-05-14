@@ -11,7 +11,7 @@ import java.util.List;
  */
 public interface EventRepository {
     @Nonnull
-    <EI extends EntityId<?>> List<EventEnvelope<? extends Event, ? extends EntityId<?>>> listAllForEntity(@Nonnull EI entityId);
+    List<EventEnvelope<? extends Event, ? extends EntityId<?>>> listAllByIds(@Nonnull EntityId<?>... entityIds);
 
     void write(@Nonnull List<EventEnvelope<? extends Event, ? extends EntityId<?>>> events);
 }
