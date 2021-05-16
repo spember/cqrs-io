@@ -23,7 +23,7 @@ import static com.google.common.truth.Truth.assertThat;
  * Use this as a general demonstration of the patterns. At least, in Java.
  */
 @ExtendWith(EventRepositoryResolver.class)
-public class GeneralServiceLifecycleTest {
+public class SofaBoundaryServiceTest {
 
     private final FurnitureMakerId me = new FurnitureMakerId("tester@test.com");
 

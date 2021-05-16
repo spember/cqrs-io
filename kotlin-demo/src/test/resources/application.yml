@@ -1,7 +1,0 @@
-micronaut:
-  application:
-    name: librarymanager
-logger:
-  levels:
-    io.micronaut: INFO
-    io.cqrs: DEBUG
