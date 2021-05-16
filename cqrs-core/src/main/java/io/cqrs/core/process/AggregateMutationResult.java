@@ -1,6 +1,7 @@
 package io.cqrs.core.process;
 
 import io.cqrs.core.Aggregate;
+import io.cqrs.core.CqrsAggregate;
 import io.cqrs.core.CqrsCommand;
 import io.cqrs.core.CqrsEntity;
 import io.cqrs.core.event.Event;
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
  * A data structure used to signal to Callers the result of an Aggregate mutation, either
  *
  */
-public class AggregateMutationResult<C extends CqrsCommand<?>, A extends Aggregate<? extends EntityId<?>>> {
+public class AggregateMutationResult<C extends CqrsCommand<?>, A extends CqrsAggregate> {
 
     // have this accept the command, and use that to generate the event factory internally
     // responsible for a a main Aggregate BUT ALSO tracks event changes internally as a map of entity to event

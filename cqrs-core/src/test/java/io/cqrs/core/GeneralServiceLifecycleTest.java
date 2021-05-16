@@ -76,7 +76,8 @@ public class GeneralServiceLifecycleTest {
             Instant.now().minus(1, ChronoUnit.DAYS),
             2,
             4,
-            "red-2", "Big Red Sofa"))
+            "red-2", "Big Red Sofa")
+        )
             .with(sofa -> {
                 assertThat(sofa.getRevision()).isEqualTo(4);
                 assertThat(sofa.getNumSeats()).isEqualTo(2);
