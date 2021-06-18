@@ -9,4 +9,3 @@
 
 rootProject.name = 'cqrs.io'
 include('cqrs-core')
-include('kotlin-demo')

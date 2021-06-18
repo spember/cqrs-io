@@ -1,20 +1,20 @@
 package io.cqrs.core;
 
+import io.cqrs.core.event.EventRepository;
+import io.cqrs.core.identifiers.EntityId;
+
 import javax.annotation.Nonnull;
 
-/**
- * An Aggregate is the boundary in which multiple Entities operate as one unit. One Entity is the 'root', who's id is
- * the only reference allowed by other Entities / Aggregates.
- *
- * An Aggregate accepts Commands, and returns failures or Events that need to be Persisted.
- *
- * An Aggregate in practice is a hybrid service class and domain object
- */
-public interface Aggregate {
+public abstract class Aggregate<EI extends EntityId<?>> extends Entity<EI> implements CqrsAggregate {
+    public Aggregate(@Nonnull final EI id) {
+        super(id);
+    }
 
     @Nonnull
-    Aggregate loadCurrentState();
-
-    @Nonnull
-    CommandHandlingResult handle(@Nonnull Command command);
+    @Override
+    public Aggregate<EI> loadCurrentState(final EventRepository eventRepository) {
+        eventRepository.listAllByIds(this.getId())
+                .forEach(this::apply);
+        return this;
+    }
 }

@@ -1,18 +1,23 @@
 package io.cqrs.core.furniture.sofa;
 
-import io.cqrs.core.AggregateRoot;
-import io.cqrs.core.DefaultEntity;
+import io.cqrs.core.Aggregate;
+import io.cqrs.core.furniture.commands.AddLegs;
+import io.cqrs.core.furniture.commands.CreateNewSofa;
+import io.cqrs.core.furniture.sofa.events.EntityCreated;
+import io.cqrs.core.furniture.sofa.events.LegsAdded;
+import io.cqrs.core.furniture.sofa.events.NameUpdated;
+import io.cqrs.core.furniture.sofa.events.SeatsAdded;
+import io.cqrs.core.process.AggregateMutationResult;
 import io.cqrs.core.event.Event;
-import io.cqrs.core.event.EventApplier;
 import io.cqrs.core.event.EventEnvelope;
+import io.cqrs.core.event.EventRepository;
 import io.cqrs.core.identifiers.EntityId;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-public class Sofa extends DefaultEntity<SofaId> implements AggregateRoot {
+public class Sofa extends Aggregate<SofaId> {
 
     private int numLegs = 0;
     private int numSeats = 0;
@@ -24,6 +29,52 @@ public class Sofa extends DefaultEntity<SofaId> implements AggregateRoot {
     public Sofa(@Nonnull final SofaId id) {
         super(id);
     }
+
+    @Nonnull
+    @Override
+    public Sofa loadCurrentState(final EventRepository eventRepository) {
+        super.loadCurrentState(eventRepository);
+        // however, this will not have hydrated the cushions
+        return this;
+    }
+
+    public AggregateMutationResult<CreateNewSofa, Sofa> assemble(final CreateNewSofa command) {
+        // what if this received a 'context' object that allowed for .. what?
+        AggregateMutationResult<CreateNewSofa, Sofa> response = new AggregateMutationResult<>(this, command);
+
+        if (!this.isBare()) {
+            return response.error(new RuntimeException("Cannot re-assemble a sofa"));
+        }
+        // check for legs and cushion ratios?
+        response.addEvents(this,
+                new NameUpdated(command.getDescription()),
+                new LegsAdded(command.getNumLegs())
+        );
+
+
+        for (int i =0; i < command.getNumSeats(); i++) {
+            response.addEvents(this, new SeatsAdded());
+        }
+
+        return response;
+    }
+
+    public AggregateMutationResult<AddLegs, Sofa> addMoreLegs(final AddLegs sourceCommand) {
+        if (this.isBare()) {
+            return new AggregateMutationResult<>(this, sourceCommand).error(new RuntimeException("Unknown Sofa"));
+        }
+        //  A trivial check: ensure that legs are not odd. The idea is to show that a command should be
+        // evaluated such that it doesn't put the Entity into an invalid state
+        if ((this.getNumLegs() + sourceCommand.getRequestedLegs()) % 2 == 1) {
+            return new AggregateMutationResult<>(this, sourceCommand)
+                .error(new RuntimeException("Cannot have an odd number of legs!"));
+        }
+        return new AggregateMutationResult<>(this, sourceCommand)
+            .addEvents(this,
+            new LegsAdded(sourceCommand.getRequestedLegs()));
+    }
+
+
 
     @Override
     protected void handleEventApply(@Nonnull final EventEnvelope<? extends Event, ? extends EntityId<?>> envelope) {

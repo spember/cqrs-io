@@ -10,10 +10,8 @@ import java.util.List;
  *
  */
 public interface EventRepository {
-
     @Nonnull
-    <T, EI extends EntityId<T>> List<EventEnvelope<? extends Event, ? extends EntityId<?>>> listAllForEntity(@Nonnull EI entityId);
+    List<EventEnvelope<? extends Event, ? extends EntityId<?>>> listAllByIds(@Nonnull EntityId<?>... entityIds);
 
     void write(@Nonnull List<EventEnvelope<? extends Event, ? extends EntityId<?>>> events);
-
 }

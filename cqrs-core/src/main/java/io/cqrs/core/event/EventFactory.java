@@ -1,8 +1,9 @@
 package io.cqrs.core.event;
 
-import io.cqrs.core.Command;
-import io.cqrs.core.CommandHandlingResult;
-import io.cqrs.core.Entity;
+import io.cqrs.core.CqrsCommand;
+import io.cqrs.core.identifiers.UserId;
+import io.cqrs.core.process.CommandHandlingResult;
+import io.cqrs.core.CqrsEntity;
 import io.cqrs.core.identifiers.EntityId;
 
 import javax.annotation.Nonnull;
@@ -14,10 +15,10 @@ import java.util.List;
  * Used to streamline the generation of new Events during the handling of a Command. Completely optional
  * but is intended to be useful in cutting down on boiler plate code.
  */
-public class EventFactory<C extends Command, EI extends EntityId<?>, E extends Entity<EI>> {
-
-    private E entity;
-    private C sourceCommand;
+public class EventFactory<C extends CqrsCommand<? extends UserId<?>>, E extends CqrsEntity<? extends EntityId<?>>> {
+    // todo: implements 'eventEnvelopeStore' in order to merge multiple later?
+    private final E entity;
+    private final C sourceCommand;
     private final List<EventEnvelope<? extends Event, ? extends EntityId<?>>> eventEnvelopes = new ArrayList<>();
 
     public EventFactory(@Nonnull final C sourceCommand, @Nonnull final E entity) {
@@ -27,14 +28,14 @@ public class EventFactory<C extends Command, EI extends EntityId<?>, E extends E
 
     /**
      * Add an event to the current uncommitted batch and apply it to the Entity.
-     * Will handle the creation of the EventCoreData and Event Envelope for you.
+     * Will with the creation of the EventCoreData and Event Envelope for you.
      *
      * @param nextEvent The next {@link Event} in the sequence
      * @return this Factory
      */
     @Nonnull
-    public EventFactory<C, EI, E> addNext(@Nonnull Event nextEvent) {
-        EventEnvelope envelope = new EventEnvelope<>(
+    public EventFactory<C, E> addNext(@Nonnull Event nextEvent) {
+        EventEnvelope<? extends Event, ? extends EntityId<?>> envelope = new EventEnvelope<>(
                 nextEvent,
                 new EventCoreData<>(
                         entity.getId(),
@@ -52,11 +53,5 @@ public class EventFactory<C extends Command, EI extends EntityId<?>, E extends E
     @Nonnull
     public List<EventEnvelope<? extends Event, ? extends EntityId<?>>> getEventEnvelopes() {
         return eventEnvelopes;
-    }
-
-    @Nonnull
-    public CommandHandlingResult<E> toUncommittedEventsResult() {
-        System.out.println("About to write an entity" + entity);
-        return new CommandHandlingResult<E>(entity, getEventEnvelopes());
     }
 }

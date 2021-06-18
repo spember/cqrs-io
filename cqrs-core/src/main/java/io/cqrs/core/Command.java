@@ -1,16 +1,31 @@
 package io.cqrs.core;
 
+import io.cqrs.core.event.EventFactory;
+import io.cqrs.core.identifiers.EntityId;
 import io.cqrs.core.identifiers.UserId;
 
 import javax.annotation.Nonnull;
 import java.time.Instant;
 
-public interface Command<UI extends UserId> {
-    @Nonnull
-    UI getUserId();
+public abstract class Command<UI extends UserId<?>> implements CqrsCommand<UI> {
+
+    private final UI userId;
+    private final Instant timeOccurred;
+
+    public Command(@Nonnull final UI userId, @Nonnull final Instant timeOccurred) {
+        this.userId = userId;
+        this.timeOccurred = timeOccurred;
+    }
 
     @Nonnull
-    Instant getTimeOccurred();
+    @Override
+    public UI getUserId() {
+        return userId;
+    }
 
-
+    @Nonnull
+    @Override
+    public Instant getTimeOccurred() {
+        return timeOccurred;
+    }
 }

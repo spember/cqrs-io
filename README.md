@@ -16,9 +16,20 @@ A small library meant to help construct [Event Sourced](https://martinfowler.com
 Please refer to the above links and the classic [Domain Driven Design](https://www.dddcommunity.org/book/evans_2003/) 
 book for _far_ more accurate descriptions of these terms. 
 
-The following descriptions may not align 100% with the 
+## General Guidelines and Rules
+
+
+
+## ... but using them actually in code
+
+The previous descriptions may not align 100% with the 
 literature, but after building these types of systems for years now, this is how I've come to describe the concepts
 successfully to others - and implement applications that follow the official spirit. 
 
-## Examples
+In other words, here's some general principles for how to structure the CQRS/DDD rules as code, which may not be 
+entirely accurate, but that I've found to work well.
+
+
+
+
 
