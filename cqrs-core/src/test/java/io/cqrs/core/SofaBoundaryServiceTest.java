@@ -32,12 +32,13 @@ public class SofaBoundaryServiceTest {
         SofaBoundaryService sofaBoundaryService = new SofaBoundaryService(eventRepository);
         CommandHandlingResult<Sofa> result = sofaBoundaryService.createNewSofa(
                 new CreateNewSofa(
-                me,
-                Instant.now().minus(1, ChronoUnit.DAYS),
-                3,
-                6,
-                        "sofa-1",
-                        "My blue sofa")
+                    me,
+                    Instant.now().minus(1, ChronoUnit.DAYS),
+                    3,
+                    6,
+                            "sofa-1",
+                            "My blue sofa"
+                )
         );
 
         assertThat(result.maybeError().isPresent()).isFalse();
