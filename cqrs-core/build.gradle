@@ -1,11 +1,6 @@
-plugins {
-    id 'java-library'
-}
-
 dependencies {
-
     // https://mvnrepository.com/artifact/com.google.code.findbugs/jsr305
-    compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
+    implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
 
     // Use JUnit Jupiter API for testing.
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
@@ -14,3 +9,16 @@ dependencies {
     // Use JUnit Jupiter Engine for testing.
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 }
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            pom {
+                name = 'CQRS.io Core'
+                description = 'The Main library'
+            }
+        }
+    }
+}
+
+
