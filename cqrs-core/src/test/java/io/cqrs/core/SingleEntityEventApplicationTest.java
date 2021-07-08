@@ -31,7 +31,7 @@ public class SingleEntityEventApplicationTest {
         Sofa sofa = new Sofa(id);
         EventsOutOfOrderException e = assertThrows(EventsOutOfOrderException.class, () ->
                 sofa.apply(new EventEnvelope<>(new LegsAdded(10),
-                        new EventCoreData<>(id, 2, new UserId<>("me")))));
+                        new EventCoreData<>(id, 2, "me"))));
         assertThat(e.getMessage()).isEqualTo("Expecting revision 1 but instead received 2");
     }
 
@@ -40,7 +40,7 @@ public class SingleEntityEventApplicationTest {
         Sofa sofa = new Sofa(new SofaId("BestSofa"));
         assertThrows(IncorrectTargetException.class, () ->
                 sofa.apply(new EventEnvelope<>(new LegsAdded(10),
-                        new EventCoreData<>(new SofaId("BestSofa2"), 1, new UserId<>("me"))))
+                        new EventCoreData<>(new SofaId("BestSofa2"), 1, "ttestington")))
                 );
 
     }
@@ -49,18 +49,18 @@ public class SingleEntityEventApplicationTest {
     void testSofaApply() {
         SofaId id = new SofaId("mark1");
         Sofa sofa = new Sofa(id);
-        sofa.apply(new EventEnvelope<>(new LegsAdded(2), new EventCoreData<>(id, 1, Instant.now(), Instant.now(), new UserId<>("me"))));
+        sofa.apply(new EventEnvelope<>(new LegsAdded(2), new EventCoreData<>(id, 1, Instant.now(), Instant.now(), "me")));
         assertThat(sofa.getNumLegs()).isEqualTo(2);
         assertThat(sofa.getRevision()).isEqualTo(1);
         // double-checking with the new Id("mark1") that the ids are equal and will not throw IncorrectTarget
-        sofa.apply(new EventEnvelope<>(new LegsAdded(10), new EventCoreData<>(new SofaId("mark1"), 2, new UserId<>("me"))));
+        sofa.apply(new EventEnvelope<>(new LegsAdded(10), new EventCoreData<>(new SofaId("mark1"), 2, "not me")));
         assertThat(sofa.getNumLegs()).isEqualTo(12);
         assertThat(sofa.getRevision()).isEqualTo(2);
     }
 
     @Test
     void testCushionApply() {
-        UserId userId = new UserId<>("me");
+        String userId = new UserId<>("me").toString();
         CushionId id = new CushionId(UUID.randomUUID());
         Cushion cushion = new Cushion(id);
 

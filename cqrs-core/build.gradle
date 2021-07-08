@@ -1,3 +1,4 @@
+
 dependencies {
     // https://mvnrepository.com/artifact/com.google.code.findbugs/jsr305
     implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
@@ -12,7 +13,8 @@ dependencies {
 
 publishing {
     publications {
-        maven(MavenPublication) {
+        mavenJava(MavenPublication) {
+            from components.java
             pom {
                 name = 'CQRS.io Core'
                 description = 'The Main library'

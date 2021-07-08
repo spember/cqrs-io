@@ -1,7 +1,6 @@
 package io.cqrs.core.event;
 
 import io.cqrs.core.identifiers.EntityId;
-import io.cqrs.core.identifiers.UserId;
 
 import javax.annotation.Nonnull;
 import java.time.Instant;
@@ -14,30 +13,33 @@ import java.time.Instant;
  *
  * The core data is less rarely used during Event application, but should still be available in certain situations
  * (e.g. you have a 'lastUpdated' field or other timestamps on your entity)
+ *
+ * Note that while the EntityId is a fixed type for the class, the 'createdBy' field is flexible in that the event
+ * may be the result of different User Types
  */
 public class EventCoreData<EI extends EntityId> {
     private final EI entityId;
     private final int revision;
     private final Instant instantObserved;
     private final Instant instantOccurred;
-    private final UserId userId;
+    private final String createdBy;
 
     public EventCoreData(@Nonnull final EI entityId, final int revision, @Nonnull final Instant instantObserved,
-                         @Nonnull final Instant instantOccurred, @Nonnull final UserId userId) {
+                         @Nonnull final Instant instantOccurred, @Nonnull final String createdBy) {
         this.entityId = entityId;
         this.revision = revision;
         this.instantObserved = instantObserved;
         this.instantOccurred = instantOccurred;
-        this.userId = userId;
+        this.createdBy = createdBy;
     }
 
     public EventCoreData(@Nonnull final EI entityId, final int revision, @Nonnull final Instant instantObserved,
-                         @Nonnull final UserId userId) {
-        this(entityId, revision, instantObserved, instantObserved, userId);
+                         @Nonnull final String createdBy) {
+        this(entityId, revision, instantObserved, instantObserved, createdBy);
     }
 
-    public EventCoreData(@Nonnull final EI entityId, final int revision, @Nonnull final UserId userId) {
-        this(entityId, revision, Instant.now(), Instant.now(), userId);
+    public EventCoreData(@Nonnull final EI entityId, final int revision, @Nonnull final String createdBy) {
+        this(entityId, revision, Instant.now(), Instant.now(), createdBy);
     }
 
     @Nonnull
@@ -60,7 +62,7 @@ public class EventCoreData<EI extends EntityId> {
     }
 
     @Nonnull
-    public UserId getUserId() {
-        return userId;
+    public String getCreatedBy() {
+        return createdBy;
     }
 }

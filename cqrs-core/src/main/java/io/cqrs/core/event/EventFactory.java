@@ -42,7 +42,7 @@ public class EventFactory<C extends CqrsCommand<? extends UserId<?>>, E extends 
                         entity.getRevision()+1,
                         Instant.now(),
                         sourceCommand.getTimeOccurred(),
-                        sourceCommand.getUserId()
+                        sourceCommand.getUserId().toString()
                         )
         );
         entity.apply(envelope);

@@ -1,37 +1,3 @@
-* Add Event Repository
-* Update Aggregate to accept commands and return events or error
-
-
-## Design problems:
-The aggregate pattern needs some re-thinking; how much command
-handling should occur within it? Should an instance of Aggregate
-have dependencies on other data sources? e.g. make calls to
-databases? If so, should there be a Factory to ease the packaging?
-If not, well, what's the difference between a Service layer and an Aggregate?
-
-Perhaps Aggregates just know how to load their current state (including)
-attached children.
-
-New thoughts... Aggregates:
-
-* are just entities that are important or first-class
-* may have other entities, but those must not be able to live by themselves 
-* know how to load their (and children) states
-* have meaningful method names, like commands (e.g. addBook).
-* methods ensure that if an Aggregate changes, its state is always 'good'
-* methods return events
-* if a dependency is needed (e.g. another repository or a specific other Agg), it is 
- passed as an argument
-* command handling logic goes in a service
-* meaningful functions in the aggregate return events... or errors? EntityModificationResult
-
-
-Flow:
-1. service boundary class receives command
-2. loads relevant Aggregate(s)
-3. aggregates return events or errors, and do not mutate
-4. events converted via factory to envelopes and saved
-
 Ok new plan:
 
 * update readme to contain basic flow between layers
@@ -41,4 +7,14 @@ Ok new plan:
 * as such, Aggregates should be passed the commands as instructions for mutation, and the AggregateMutationResult 
 maintains underlying EntityWithEvents objects, which in turn apply the event to the entity
 
+# wait, now that we need to serialize / deserialize, we need a 'registry' 
+by marking the event with the class it belongs to, we can get the types we need
+to 'cache' on startup.
+
+Registry:
+
+maintains a mapping of Event class to... waaait
+on hydration:
+* serialize event data into class
+* create event envelope from the ID THAT WAS SENT TO IT AHHH
 

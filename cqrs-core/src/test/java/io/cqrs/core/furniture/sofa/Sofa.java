@@ -3,7 +3,6 @@ package io.cqrs.core.furniture.sofa;
 import io.cqrs.core.Aggregate;
 import io.cqrs.core.furniture.commands.AddLegs;
 import io.cqrs.core.furniture.commands.CreateNewSofa;
-import io.cqrs.core.furniture.sofa.events.EntityCreated;
 import io.cqrs.core.furniture.sofa.events.LegsAdded;
 import io.cqrs.core.furniture.sofa.events.NameUpdated;
 import io.cqrs.core.furniture.sofa.events.SeatsAdded;
