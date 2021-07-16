@@ -58,7 +58,7 @@ public class SofaBoundaryService {
 
     }
 
-    private <A extends CqrsAggregate> CommandHandlingResult<A> processCommand(
+    private <A extends CqrsAggregate<A>> CommandHandlingResult<A> processCommand(
         A aggregate,
         Function<A, AggregateMutationResult<?, A>> logic) {
 

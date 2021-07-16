@@ -13,9 +13,14 @@ import javax.annotation.Nonnull;
  * Events that need to be persisted.
  *
  */
-public interface CqrsAggregate {
+public interface CqrsAggregate<SELF extends CqrsAggregate> {
 
     @Nonnull
-    CqrsAggregate loadCurrentState(EventRepository eventRepository);
+    CqrsAggregate<SELF> loadCurrentState(EventRepository eventRepository);
+
+    @SuppressWarnings("unchecked")
+    default SELF self() {
+        return (SELF) this;
+    }
 
 }

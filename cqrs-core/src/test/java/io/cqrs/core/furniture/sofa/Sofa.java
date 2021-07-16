@@ -9,14 +9,13 @@ import io.cqrs.core.furniture.sofa.events.SeatsAdded;
 import io.cqrs.core.process.AggregateMutationResult;
 import io.cqrs.core.event.Event;
 import io.cqrs.core.event.EventEnvelope;
-import io.cqrs.core.event.EventRepository;
 import io.cqrs.core.identifiers.EntityId;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Sofa extends Aggregate<SofaId> {
+public class Sofa extends Aggregate<SofaId, Sofa> {
 
     private int numLegs = 0;
     private int numSeats = 0;
@@ -27,14 +26,6 @@ public class Sofa extends Aggregate<SofaId> {
 
     public Sofa(@Nonnull final SofaId id) {
         super(id);
-    }
-
-    @Nonnull
-    @Override
-    public Sofa loadCurrentState(final EventRepository eventRepository) {
-        super.loadCurrentState(eventRepository);
-        // however, this will not have hydrated the cushions
-        return this;
     }
 
     public AggregateMutationResult<CreateNewSofa, Sofa> assemble(final CreateNewSofa command) {
@@ -76,6 +67,7 @@ public class Sofa extends Aggregate<SofaId> {
 
 
     @Override
+    @SuppressWarnings("unchecked")
     protected void handleEventApply(@Nonnull final EventEnvelope<? extends Event, ? extends EntityId<?>> envelope) {
         if (envelope.getEvent() instanceof LegsAdded) {
             applyLegsAdded((EventEnvelope<LegsAdded, SofaId>) envelope);
