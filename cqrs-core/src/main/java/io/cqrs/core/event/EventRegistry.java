@@ -65,8 +65,7 @@ public class EventRegistry {
 
         while(!resourcesToScan.isEmpty()) {
             String target = resourcesToScan.poll();
-            if (target != "" && target != null) {
-//                System.out.println("Scanning " + target);
+            if (!target.equals("") && target != null) {
                 new BufferedReader(new InputStreamReader(loader.getResourceAsStream(target)))
                         .lines()
                         .forEach(line -> {

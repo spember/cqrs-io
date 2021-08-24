@@ -36,16 +36,6 @@ public class Cushion extends Entity<CushionId, Cushion> {
         }
     }
 
-//    @Override
-//    protected void handleEventApply(@Nonnull final EventEnvelope<? extends Event, ? extends EntityId<?>> envelope) {
-//        if (envelope.getEvent() instanceof PositionChosen) {
-//            position = ((EventEnvelope<PositionChosen, SofaId>) envelope).getEvent().getPosition();
-//        }
-//        if (envelope.getEvent() instanceof SomeoneSat) {
-//            timesSatOn += ((EventEnvelope<SomeoneSat, SofaId>) envelope).getEvent().getTimes();
-//        }
-//    }
-
     public enum Position {
         LEFT, RIGHT, MIDDLE, NOT_CHOSEN
     }
