@@ -15,7 +15,7 @@ import javax.annotation.Nonnull;
  *
  * @param <EI>
  */
-public interface CqrsEntity<EI extends EntityId<?>> {
+public interface CqrsEntity<EI extends EntityId<?>, SELF extends CqrsEntity<EI, SELF>> {
 
     @Nonnull
     EI getId();
@@ -32,5 +32,5 @@ public interface CqrsEntity<EI extends EntityId<?>> {
     boolean isBare();
 
     @Nonnull
-    CqrsEntity<EI> apply(@Nonnull final EventEnvelope<? extends Event, ? extends EntityId<?>> envelope) throws EventsOutOfOrderException;
+    SELF apply(@Nonnull final EventEnvelope<? extends Event, ? extends EntityId<?>> envelope) throws EventsOutOfOrderException;
 }

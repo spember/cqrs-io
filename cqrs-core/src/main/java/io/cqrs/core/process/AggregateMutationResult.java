@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  * A data structure used to signal to Callers the result of an Aggregate mutation, either
  *
  */
-public class AggregateMutationResult<C extends CqrsCommand<?>, A extends CqrsAggregate> {
+public class AggregateMutationResult<C extends CqrsCommand<?>, A extends CqrsAggregate<A>> {
 
     // have this accept the command, and use that to generate the event factory internally
     // responsible for a a main Aggregate BUT ALSO tracks event changes internally as a map of entity to event
@@ -45,8 +45,8 @@ public class AggregateMutationResult<C extends CqrsCommand<?>, A extends CqrsAgg
      */
 //    private final List<Event> uncommittedEvents = new ArrayList<>();
     private Exception capturedError;
-    private A capturedAggregate;
-    private C sourceCommand;
+    private final A capturedAggregate;
+    private final C sourceCommand;
 
     private final Map<EntityId<?>, EventFactory<C, ?>> eventStorage = new HashMap<>();
 
@@ -61,7 +61,7 @@ public class AggregateMutationResult<C extends CqrsCommand<?>, A extends CqrsAgg
         // todo: break this up into success and failure classes so that we cannot add events after an error.
     }
 
-    public <E extends CqrsEntity<?>> AggregateMutationResult<C, A> addEvents(E entity, Event... events) {
+    public <E extends CqrsEntity<?, E>> AggregateMutationResult<C, A> addEvents(E entity, Event... events) {
         if (!eventStorage.containsKey(entity.getId())) {
             eventStorage.put(entity.getId(), new EventFactory<>(sourceCommand, entity));
         }

@@ -14,7 +14,7 @@ import javax.annotation.Nonnull;
  *
  * @param <EI>
  */
-public abstract class Entity<EI extends EntityId<?>> implements CqrsEntity<EI> {
+public abstract class Entity<EI extends EntityId<?>, SELF extends Entity<EI, SELF>> implements CqrsEntity<EI, SELF> {
 
     protected EI id;
     protected int revision = 0;
@@ -41,7 +41,8 @@ public abstract class Entity<EI extends EntityId<?>> implements CqrsEntity<EI> {
 
     @Nonnull
     @Override
-    public CqrsEntity<EI> apply(@Nonnull final EventEnvelope<? extends Event, ? extends EntityId<?>> envelope) throws EventsOutOfOrderException {
+    @SuppressWarnings("unchecked")
+    public SELF apply(@Nonnull final EventEnvelope<? extends Event, ? extends EntityId<?>> envelope) throws EventsOutOfOrderException {
         if (!envelope.getEventCoreData().getEntityId().equals(this.id)) {
             throw new IncorrectTargetException("Attempted to apply an event meant for " +
                     (envelope.getEventCoreData().getEntityId()) + " to this entity, " + this.id);
@@ -52,7 +53,7 @@ public abstract class Entity<EI extends EntityId<?>> implements CqrsEntity<EI> {
         }
         revision = envelope.getEventCoreData().getRevision();
         handleEventApply(envelope);
-        return this;
+        return (SELF) this;
     }
 
     abstract protected void handleEventApply(@Nonnull final EventEnvelope<? extends Event, ? extends EntityId<?>> envelope);

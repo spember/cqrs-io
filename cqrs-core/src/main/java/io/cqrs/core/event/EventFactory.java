@@ -15,7 +15,7 @@ import java.util.List;
  * Used to streamline the generation of new Events during the handling of a Command. Completely optional
  * but is intended to be useful in cutting down on boiler plate code.
  */
-public class EventFactory<C extends CqrsCommand<? extends UserId<?>>, E extends CqrsEntity<? extends EntityId<?>>> {
+public class EventFactory<C extends CqrsCommand<? extends UserId<?>>, E extends CqrsEntity<? extends EntityId<?>,?>> {
     // todo: implements 'eventEnvelopeStore' in order to merge multiple later?
     private final E entity;
     private final C sourceCommand;
@@ -42,7 +42,7 @@ public class EventFactory<C extends CqrsCommand<? extends UserId<?>>, E extends 
                         entity.getRevision()+1,
                         Instant.now(),
                         sourceCommand.getTimeOccurred(),
-                        sourceCommand.getUserId()
+                        sourceCommand.getUserId().toString()
                         )
         );
         entity.apply(envelope);

@@ -9,7 +9,7 @@ import io.cqrs.core.identifiers.EntityId;
 
 import javax.annotation.Nonnull;
 
-public class Cushion extends Entity<CushionId> {
+public class Cushion extends Entity<CushionId, Cushion> {
 
     private Position position = Position.NOT_CHOSEN;
     private int timesSatOn = 0;
@@ -27,7 +27,7 @@ public class Cushion extends Entity<CushionId> {
     }
 
     @Override
-    protected void handleEventApply(@Nonnull final EventEnvelope<? extends Event, ? extends EntityId<?>> envelope) {
+    protected void handleEventApply(@Nonnull EventEnvelope<? extends Event, ? extends EntityId<?>> envelope) {
         if (envelope.getEvent() instanceof PositionChosen) {
             position = ((EventEnvelope<PositionChosen, SofaId>) envelope).getEvent().getPosition();
         }
