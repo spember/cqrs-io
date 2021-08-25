@@ -6,7 +6,7 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 
-import java.io.IOException;
+import java.io.InvalidObjectException;
 
 public class EventRegistryResolver implements ParameterResolver {
 
@@ -20,7 +20,7 @@ public class EventRegistryResolver implements ParameterResolver {
         EventRegistry registry = new EventRegistry();
         try {
             registry.scan("io.cqrs.core.furniture");
-        } catch (IOException e) {
+        } catch (InvalidObjectException e) {
             e.printStackTrace();
         }
         return registry;

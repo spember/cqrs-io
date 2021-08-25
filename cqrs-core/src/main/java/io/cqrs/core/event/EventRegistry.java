@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.InvalidObjectException;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -42,9 +43,9 @@ public class EventRegistry {
      * One thing to consider in the future is an EventAliasProvider, sourced from some datastore.
      *
      * @throws RegistryCollisionException if an alias or name collides - no duplicates!
-     * @throws IOException unable to scan classpath for Events
+     * @throws InvalidObjectException unable to scan classpath for Events or the path is missing
      */
-    public void scan(String packageName) throws RegistryCollisionException, IOException {
+    public void scan(String packageName) throws RegistryCollisionException, InvalidObjectException {
         findEventClassesInPackageHierarchy(packageName.replaceAll("[.]", "/"))
                 .forEach( eventClass -> {
                     addToAliasLookup(eventClass);
@@ -52,7 +53,7 @@ public class EventRegistry {
                 });
     }
 
-    private Set<Class<? extends Event>> findEventClassesInPackageHierarchy(@Nonnull String packageFilePath) {
+    private Set<Class<? extends Event>> findEventClassesInPackageHierarchy(@Nonnull String packageFilePath) throws InvalidObjectException {
         // using a Queue, scan the package. add all non .class lines to the queue. Of those .class files, load them
         // if they are of type Event, hold on to them
         ClassLoader loader = ClassLoader.getSystemClassLoader();
@@ -62,19 +63,21 @@ public class EventRegistry {
 
         Set<Class<? extends Event>> eventClasses = new HashSet<>();
 
-
         while(!resourcesToScan.isEmpty()) {
             String target = resourcesToScan.poll();
-            if (!target.equals("") && target != null) {
-                new BufferedReader(new InputStreamReader(loader.getResourceAsStream(target)))
-                        .lines()
-                        .forEach(line -> {
-                            if (line.endsWith(".class")) {
-                                ifEventClass(target, line, eventClasses::add);
-                            } else {
-                                resourcesToScan.add(target + "/" + line);
-                            }
-                        });
+            InputStream targetStream = loader.getResourceAsStream(target);
+            if (target.equals("") || targetStream == null) {
+                throw new InvalidObjectException("No resource target found at " + target);
+            } else {
+                new BufferedReader(new InputStreamReader(targetStream))
+                    .lines()
+                    .forEach(line -> {
+                        if (line.endsWith(".class")) {
+                            ifEventClass(target, line, eventClasses::add);
+                        } else {
+                            resourcesToScan.add(target + "/" + line);
+                        }
+                    });
             }
 
         }
@@ -96,14 +99,13 @@ public class EventRegistry {
     }
 
 
-    private void addToClassLookup(Class<? extends Event> eClass) {
+    private void addToClassLookup(Class<? extends Event> eClass) throws RegistryCollisionException {
 
-        String alias = calculateAlias(eClass); // todo make this more complicated with an annotation
-        if (!aliasToClassLookup.containsKey(alias)) {
-            aliasToClassLookup.put(alias, eClass);
-        } else {
-            // throw?
+        String alias = calculateAlias(eClass);
+        if (aliasToClassLookup.containsKey(alias)) {
+            throw  new RegistryCollisionException("There is an already a Class entry for alias " + alias);
         }
+        aliasToClassLookup.put(alias, eClass);
     }
 
     private String calculateAlias(Class<? extends Event> eClass) {
@@ -128,7 +130,11 @@ public class EventRegistry {
      * @return Event Class, if found
      */
     public Optional<String> aliasForEventClass(@Nonnull Class<? extends Event> eventClass) {
-        return classToAliasLookup.get(eventClass).stream().findFirst();
+        if (!classToAliasLookup.containsKey(eventClass)) {
+            return Optional.empty();
+        } else {
+            return classToAliasLookup.get(eventClass).stream().findFirst();
+        }
     }
 
     /**

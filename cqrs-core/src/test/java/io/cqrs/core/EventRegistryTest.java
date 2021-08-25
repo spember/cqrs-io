@@ -1,7 +1,8 @@
 package io.cqrs.core;
 
-import com.google.common.truth.Truth;
 import io.cqrs.core.event.EventRegistry;
+import io.cqrs.core.exceptions.RegistryCollisionException;
+import io.cqrs.core.failure.FailureEvent1;
 import io.cqrs.core.furniture.sofa.events.LegsAdded;
 import io.cqrs.core.furniture.sofa.events.SomeoneSat;
 import io.cqrs.core.resolvers.EventRegistryResolver;
@@ -9,7 +10,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 
+import java.io.InvalidObjectException;
+
 import static com.google.common.truth.Truth.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(EventRegistryResolver.class)
 public class EventRegistryTest {
@@ -29,10 +33,17 @@ public class EventRegistryTest {
     @Test
     public void missingAliasesShouldBeEmpty(EventRegistry registry) {
         assertThat(registry.classFromAlias("test").isPresent()).isFalse();
+        assertThat(registry.aliasForEventClass(FailureEvent1.class).isPresent()).isFalse();
     }
 
+    @Test
+    public void collidingAliasesShouldThrow() {
+        assertThrows(RegistryCollisionException.class, () -> new EventRegistry().scan("io.cqrs.core.failure"));
+    }
 
-
-    // test error
-    // test aliasing an event
+    @Test
+    public void scanningAnInvalidPackageShouldThrow() {
+        // oops typo in package name
+        assertThrows(InvalidObjectException.class, () -> new EventRegistry().scan("io.cqrs.corf.furniture"));
+    }
 }
