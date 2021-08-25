@@ -1,14 +1,16 @@
 package io.cqrs.core.event;
 
 import io.cqrs.core.exceptions.RegistryCollisionException;
+import org.reflections.Reflections;
 
 import javax.annotation.Nonnull;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.InvalidObjectException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 
 /**
@@ -53,35 +55,8 @@ public class EventRegistry {
                 });
     }
 
-    private Set<Class<? extends Event>> findEventClassesInPackageHierarchy(@Nonnull String packageFilePath) throws InvalidObjectException {
-        // using a Queue, scan the package. add all non .class lines to the queue. Of those .class files, load them
-        // if they are of type Event, hold on to them
-        ClassLoader loader = ClassLoader.getSystemClassLoader();
-
-        Queue<String> resourcesToScan = new LinkedList<>();
-        resourcesToScan.add(packageFilePath);
-
-        Set<Class<? extends Event>> eventClasses = new HashSet<>();
-
-        while(!resourcesToScan.isEmpty()) {
-            String target = resourcesToScan.poll();
-            InputStream targetStream = loader.getResourceAsStream(target);
-            if (target.equals("") || targetStream == null) {
-                throw new InvalidObjectException("No resource target found at " + target);
-            } else {
-                new BufferedReader(new InputStreamReader(targetStream))
-                    .lines()
-                    .forEach(line -> {
-                        if (line.endsWith(".class")) {
-                            ifEventClass(target, line, eventClasses::add);
-                        } else {
-                            resourcesToScan.add(target + "/" + line);
-                        }
-                    });
-            }
-
-        }
-        return eventClasses;
+    private Set<Class<? extends Event>> findEventClassesInPackageHierarchy(@Nonnull String packagePath) {
+        return new Reflections(packagePath).getSubTypesOf(Event.class);
     }
 
     private void ifEventClass(String packageName, String className, Consumer<Class<? extends Event>> handler) {
