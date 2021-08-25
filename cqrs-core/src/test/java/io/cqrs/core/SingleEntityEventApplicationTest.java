@@ -2,7 +2,7 @@ package io.cqrs.core;
 
 import io.cqrs.core.event.EventCoreData;
 import io.cqrs.core.event.EventEnvelope;
-import io.cqrs.core.event.EventRepositoryResolver;
+import io.cqrs.core.resolvers.EventRepositoryResolver;
 import io.cqrs.core.exceptions.EventsOutOfOrderException;
 import io.cqrs.core.exceptions.IncorrectTargetException;
 import io.cqrs.core.furniture.sofa.Cushion;

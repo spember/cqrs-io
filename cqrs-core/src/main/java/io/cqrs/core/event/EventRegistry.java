@@ -91,13 +91,14 @@ public class EventRegistry {
                 handler.accept((Class<? extends Event>) loadedClass);
             }
         } catch (ClassNotFoundException e) {
-            System.out.println("Could not load " + path);
+            // throw?
         }
     }
 
 
     private void addToClassLookup(Class<? extends Event> eClass) {
-        String alias = eClass.getSimpleName(); // todo make this more compliacted with an annotation
+
+        String alias = calculateAlias(eClass); // todo make this more complicated with an annotation
         if (!aliasToClassLookup.containsKey(alias)) {
             aliasToClassLookup.put(alias, eClass);
         } else {
@@ -105,10 +106,17 @@ public class EventRegistry {
         }
     }
 
+    private String calculateAlias(Class<? extends Event> eClass) {
+        if (eClass.isAnnotationPresent(EventAlias.class)) {
+            return eClass.getAnnotation(EventAlias.class).alias();
+        } else {
+            return eClass.getSimpleName();
+        }
+    }
+
     private void addToAliasLookup(Class<? extends Event> eClass) {
         List<String> aliases = new ArrayList<>();
-        aliases.add(eClass.getSimpleName());
-
+        aliases.add(calculateAlias(eClass));
         classToAliasLookup.put(eClass, aliases);
     }
 
@@ -129,6 +137,6 @@ public class EventRegistry {
      * @return return first alias to use for the event, if found
      */
     public Optional<Class<? extends Event>> classFromAlias(@Nonnull String alias) {
-        return Optional.of(aliasToClassLookup.get(alias));
+        return Optional.ofNullable(aliasToClassLookup.get(alias));
     }
 }
