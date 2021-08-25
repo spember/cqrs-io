@@ -8,6 +8,7 @@ import io.cqrs.core.furniture.sofa.events.SomeoneSat;
 import io.cqrs.core.resolvers.EventRegistryResolver;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.reflections.ReflectionsException;
 
 
 import java.io.InvalidObjectException;
@@ -44,6 +45,6 @@ public class EventRegistryTest {
     @Test
     public void scanningAnInvalidPackageShouldThrow() {
         // oops typo in package name
-        assertThrows(InvalidObjectException.class, () -> new EventRegistry().scan("io.cqrs.corf.furniture"));
+        assertThrows(ReflectionsException.class, () -> new EventRegistry().scan("io.cqrs.corf.furniture"));
     }
 }
